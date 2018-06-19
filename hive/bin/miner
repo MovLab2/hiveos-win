@@ -42,7 +42,7 @@ fi
 
 function start() {
 	amd-oc-safe > /dev/null #be silent
-                                    
+
 	screen -wipe > /dev/null 2>&1
 	session_count=`screen -ls miner | grep miner | wc -l`
 	if [[ $session_count > 0 ]]; then
@@ -58,7 +58,7 @@ function start() {
 
 	#screen -dm -S miner bash -c "${MINER}; bash"
 	#hack to preselect window 1
-	#yes, empty bash or it will hang from time to time if start with screen miner instantly 
+	#yes, empty bash or it will hang from time to time if start with screen miner instantly
 	screen -S miner -dm -c /hive/etc/screenrc.miner bash
 	for i in {1..25}; do
 		sleep 0.2 #it needs some time? it happens that you'll have "No screen session found" without sleep
@@ -96,7 +96,7 @@ function stop() {
 		done
 	fi
 
-  taskkill.exe /f /im bminer.exe > /dev/null 2>&1
+	taskkill.exe /f /im bminer.exe > /dev/null 2>&1
 
 	#remove khs so no confusing for watchdog
 	#[[ -e /run/hive/khs ]] && rm /run/hive/khs

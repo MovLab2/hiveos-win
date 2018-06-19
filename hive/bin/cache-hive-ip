@@ -46,10 +46,10 @@ exitcode=$?
 
 echo -e "\n$SEPARATOR" >> /etc/hosts
 if [[ -z $ent || $exitcode > 0 ]]; then
-    echo "Unable to resolve $HOST"
-    ent="#Unable to resolve $HOST" #to place this in file
+	echo "Unable to resolve $HOST"
+	ent="#Unable to resolve $HOST" #to place this in file
 else
-    echo "Writing DNS resolve \"$ent\" to /etc/hosts"
+	echo "Writing DNS resolve \"$ent\" to /etc/hosts"
 fi
 
 echo $ent >> /etc/hosts

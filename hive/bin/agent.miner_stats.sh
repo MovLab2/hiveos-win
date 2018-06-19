@@ -65,18 +65,18 @@ function miner_stats {
 				cckhs=(`echo "$striplines" | grep 'KHS=' | sed -e 's/.*=//'`) #&& echo ${cckhs[@]}
 				ccbusids=(`echo "$striplines" | grep 'BUS=' | sed -e 's/.*=//'`) #&& echo ${ccbusids[@]}
 
-        
+
 				#local nvidiastats
 				for (( i=0; i < ${#cckhs[@]}; i++ )); do
 					#if temp is 0 then driver or GPU failed
 					[[ ${cctemps[$i]} == "0.0" ]] && cckhs[$i]="0.0"
-          
+
 					#cckhs[$i]="84316579.94" #test
 					#check Ghs. 1080ti gives ~64mh (64000kh) on lyra. when it's showing ghs then load is 0 on gpu
 					#if [[ `echo ${cckhs[$i]} | awk '{ print ($1 >= 1000000) ? 1 : 0 }'` == 1 ]]; then #hash is in Ghs, >= 1000000 khs
 					if [[ `echo ${cckhs[$i]} | awk '{ print ($1 >= 1000) ? 1 : 0 }'` == 1 ]]; then # > 1Mh
 						#[[ -z $nvidiastats ]] && nvidiastats=`gpu-stats nvidia` #a bit overhead in calling nvidia-smi again
-						local busid=`echo ${ccbusids[$i]} | awk '{ printf("%02x:00.0", $1) }' | tr -dc '[:print:]'` #ccbus is decimal   
+						local busid=`echo ${ccbusids[$i]} | awk '{ printf("%02x:00.0", $1) }' | tr -dc '[:print:]'` #ccbus is decimal
 						local load_i=`echo "$gpu_stats" | jq ".busids|index(\"$busid\")" | tr -dc '[:print:]'`
 						if [[ $load_i != "null" ]]; then #can be null on failed driver
 							local load=`echo "$gpu_stats" | jq -r --arg load_i $load_i '.load[$load_i|tonumber]' | tr -dc '[:print:]'`
@@ -86,13 +86,13 @@ function miner_stats {
 								cckhs[$i]="0.0"
 						fi
 					fi
-          
+
 					#khs=`echo $khs ${cckhs[$i]} | awk '{ printf("%.3f", $1 + $2) }'`
 					khs=`echo $khs ${cckhs[$i]} | awk '{ printf("%.3f", $1 + $2) }'`
 				done
 
 				khs=`echo $khs | sed -E 's/^( *[0-9]+\.[0-9]([0-9]*[1-9])?)0+$/\1/'` #1234.100 -> 1234.1
-        
+
 				stats=$(jq -n \
 					--arg uptime "$uptime", --arg algo "$algo" \
 					--argjson khs "`echo ${cckhs[@]} | tr " " "\n" | jq -cs '.'`" \
@@ -257,9 +257,9 @@ function miner_stats {
 			else
 				khs=`echo $stats_raw | jq -r '.hashrate.total[0]' | awk '{print $1/1000}'`
 				#local cpu_temp=`cat /sys/class/thermal/thermal_zone*/temp | head -n $(nproc) | awk '{print $1/1000}' | jq -rsc .` #just a try to get CPU temps
-        local cpu_temp=`cpu_temp.bat | tail -n $(nproc) | awk '{print $1/1000}' | jq -rsc .` #just a try to get CPU temps
-        stats=`echo $stats_raw | jq --arg cpu_temp $(echo $cpu_temp | sed 's/\r$//') '{hs: [.hashrate.threads[][1]], temp: $cpu_temp, uptime: .connection.uptime}'`
-        #echo $stats
+				local cpu_temp=`cpu_temp.bat | tail -n $(nproc) | awk '{print $1/1000}' | jq -rsc .` #just a try to get CPU temps
+				stats=`echo $stats_raw | jq --arg cpu_temp $(echo $cpu_temp | sed 's/\r$//') '{hs: [.hashrate.threads[][1]], temp: $cpu_temp, uptime: .connection.uptime}'`
+				#echo $stats
 			fi
 		;;
 		cpuminer-opt)

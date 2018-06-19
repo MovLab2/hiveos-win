@@ -40,7 +40,7 @@ cpu_indexes_array=`echo "$gpu_detect_json" | jq -c '[ . | to_entries[] | select(
 ########################################################################################################################
 
 . agent.miner_stats.sh
-       
+
 . agent.do_command.sh
 
 ########################################################################################################################
@@ -56,12 +56,12 @@ function loop {
 
 	[ -z $MINER ] && MINER="claymore"
 	HIVE_URL="$HIVE_HOST_URL/worker/api"
-  
+
 	gpu_stats=`gpu-stats`
 	local temp=$(jq '.temp' <<< $gpu_stats)
 	local fan=$(jq '.fan' <<< $gpu_stats)
 	local power=$(jq '.power' <<< $gpu_stats)
-         
+
 
 	miner2_json=
 	if [[ ! -z $MINER2 ]]; then
@@ -70,20 +70,20 @@ function loop {
 		miner2_json=$(jq -n --arg miner2 "$MINER2" --arg total_khs2 "$khs" --argjson miner_stats2 "$stats" \
 			'{"params": {$miner2, $total_khs2, $miner_stats2}}')
 	fi
-         
+
 	miner_stats $MINER #khs and stats are global
 
 	echo -en "Hashrate ${CYAN}$MINER${NOCOLOR} `[[ $khs > 0 ]] && echo -e ${YELLOW} || echo -e ${RED}`$khs${NOCOLOR} kH/s"
 	[[ ! -z $MINER2 ]] &&
 		echo -en " ${CYAN}$MINER2${NOCOLOR} `[[ $khs2 > 0 ]] && echo -e ${YELLOW} || echo -e ${RED}`$khs2${NOCOLOR} kH/s"
-  echo -en "\n"
+	echo -en "\n"
 	echo $khs > /run/hive/khs
 
 
 
 	#echo $stats
 	#uptime: load averages for the past 1, 5, and 15 minutes
-  
+
 	request=$(
 	jq -n \
 	--arg rig_id "$RIG_ID" \
@@ -104,13 +104,13 @@ function loop {
 		}
 	}'
 	)
-  
+
 	[[ ! -z $miner2_json ]] && #add miner2 stats to json
 		request=`echo "$request" "$miner2_json" | jq -s '.[0] * .[1]'`
-  
+
 	echo $request | jq '.' -C -c
 
-  if [[ -z $RIG_ID ]]; then
+	if [[ -z $RIG_ID ]]; then
 		echo -e "${YELLOW}No RIG_ID, skipping sending stats${NOCOLOR}"
 		return
 	fi
@@ -122,24 +122,24 @@ function loop {
 	response=$(echo "$request" | curl --insecure -L --data @- \
 	--connect-timeout 7 --max-time 15 --silent \
 	-XPOST "${HIVE_URL}?id_rig=$RIG_ID&method=stats"  -H "Content-Type: application/json")
-  
+
 	exitcode=$?
 	if [[ $exitcode -ne 0 || -z $response ]]; then
 		echo -e "${RED}Error sending stats${NOCOLOR} $HIVE_HOST_URL" && human-curl-error $exitcode
 		echo "[`date`] < ERROR SENDING STATS TO $HIVE_HOST_URL (curl code=$exitcode) \"$response\"" >> $LOG
 		return $exitcode
 	fi
-  
+
 	#echo $response
 	#echo "[`date`] < `echo $response | jq '.' -c`" >> $LOG
 	echo "[`date`] < $response" >> $LOG #full response even invalid
-  
+
 	error=$(echo $response | jq '.error | select (.!=null)' --raw-output)
-  [[ $? != 0 ]] && echo -e "${RED}Invalid response${NOCOLOR}: $HIVE_HOST_URL\n$response" && return 1
-  [[ ! -z $error ]] && echo -e "${RED}Error response${NOCOLOR}: $error" && return 1
-  
+	[[ $? != 0 ]] && echo -e "${RED}Invalid response${NOCOLOR}: $HIVE_HOST_URL\n$response" && return 1
+	[[ ! -z $error ]] && echo -e "${RED}Error response${NOCOLOR}: $error" && return 1
+
 	command=$(echo "$response" | jq '.result.command' --raw-output| tr -dc '[:print:]')
-  
+
 	[[ $command != "OK" ]] && echo "$response" | jq '.result'
 
 	if [[ $command != "batch" ]]; then

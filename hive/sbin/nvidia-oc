@@ -126,7 +126,7 @@ for (( i=0; i < $n; ++i )); do
 
 	if [[ ! -z $FAN || ${FAN[$i]} != 0 ]]; then
 		#args+=" -a [fan:$i]/GPUTargetFanSpeed=${FAN[$i]}"
-    args+=" -setFanSpeed:$i,${FAN[$i]}"
+		args+=" -setFanSpeed:$i,${FAN[$i]}"
 	fi
 
 
@@ -141,14 +141,14 @@ for (( i=0; i < $n; ++i )); do
 
 	[[ ! -z $CLOCK ]] &&
 		#args+=" -a [gpu:$i]/GPUGraphicsClockOffset[$x]=${CLOCK[$i]}"
-     args+=" -setBaseClockOffset:$i,0,${CLOCK[$i]}"
+		args+=" -setBaseClockOffset:$i,0,${CLOCK[$i]}"
 
 	[[ ! -z $MEM ]] &&
 		#args+=" -a [gpu:$i]/GPUMemoryTransferRateOffset[$x]=${MEM[$i]}"
-     args+=" -setMemoryClockOffset:$i,0,${CLOCK[$i]}"
+		args+=" -setMemoryClockOffset:$i,0,${CLOCK[$i]}"
 
 #	[[ ! -z $LOGO_BRIGHTNESS ]] &&
-#		args+=" -a [gpu:$i]/GPULogoBrightness=$LOGO_BRIGHTNESS"  
+#		args+=" -a [gpu:$i]/GPULogoBrightness=$LOGO_BRIGHTNESS"
 
 
 	if [[ ! -z $args ]]; then

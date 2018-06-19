@@ -32,8 +32,8 @@ arg_boot=0
 
 #check for arguments
 for var in "$@"; do
-    [[ $var == "restartminer" ]] && arg_restartminer=1
-    [[ $var == "boot" ]] && arg_boot=1
+	[[ $var == "restartminer" ]] && arg_restartminer=1
+	[[ $var == "boot" ]] && arg_boot=1
 done
 
 # Make hello request ================================================================
@@ -101,8 +101,8 @@ exitcode=$?
 echo "$response" | jq -C '.'
 
 [ $? -ne 0 ] && echo -e "${RED}Error parsing JSON response:${NOCOLOR} $response" && exit $? #error json parsing
-error=$(echo $response | jq '.error | select (.!=null)' --raw-output)  
-echo $error 
+error=$(echo $response | jq '.error | select (.!=null)' --raw-output)
+echo $error
 [[ ! -z $error ]] && echo -e "${RED}ERROR:${NOCOLOR} `echo $response | jq '.error.message' -r`" && exit 1
 
 
@@ -127,14 +127,14 @@ sed -i 's/\r$//' $RIG_CONF
 wallet=$(echo $response | jq '.result.wallet | select (.!=null)' --raw-output)
 if [[ ! -z $wallet ]]; then
 	echo "$wallet" > $WALLET_CONF
-  sed -i 's/\r$//' $WALLET_CONF
+	sed -i 's/\r$//' $WALLET_CONF
 fi
 
 # Nvidia config ================================================================
 nvidia_oc=$(echo $response | jq '.result.nvidia_oc | select (.!=null)' --raw-output)
 if [[ ! -z $nvidia_oc ]]; then
 	echo "$nvidia_oc" > $NVIDIA_OC_CONF
-  sed -i 's/\r$//' $NVIDIA_OC_CONF
+	sed -i 's/\r$//' $NVIDIA_OC_CONF
 else
 	[[ -f $NVIDIA_OC_CONF ]] && rm $NVIDIA_OC_CONF
 fi
@@ -144,7 +144,7 @@ amd_oc=$(echo $response | jq '.result.amd_oc | select (.!=null)' --raw-output)
 if [[ ! -z $amd_oc ]]; then
 	echo "Saving AMD OC config"
 	echo "$amd_oc" > $AMD_OC_CONF
-  sed -i 's/\r$//' $AMD_OC_CONF
+	sed -i 's/\r$//' $AMD_OC_CONF
 else
 	[[ -f $AMD_OC_CONF ]] && rm $AMD_OC_CONF
 fi

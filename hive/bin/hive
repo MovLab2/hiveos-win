@@ -99,7 +99,7 @@ openvpn-install
 ### Check for internal GPU ##############################################################################
 
 if [[ $GPU_FIRST_AMD == 0 && $GPU_FIRST_NVIDIA == 0 ]]; then
-    warnmsg=$(cat <<WARN
+	warnmsg=$(cat <<WARN
 $YELLOW
 #####################################################################
 ###
@@ -115,13 +115,13 @@ WARN
 	#rm config so maybe xorg autoconfig will work
 	#rm /etc/X11/xorg.conf
 
-    echo2 "$warnmsg"
-    sleep 5
+	echo2 "$warnmsg"
+	sleep 5
 fi
 
 ### Nvidia not first warning ############################################################################
 if [ $GPU_FIRST_AMD -gt 0 ] && [ $GPU_COUNT_NVIDIA -gt 0 ]; then
-    warnmsg=$(cat <<WARN
+	warnmsg=$(cat <<WARN
 $YELLOW
 #####################################################################
 ###
@@ -139,8 +139,8 @@ $NOCOLOR
 WARN
 )
 
-    echo2 "$warnmsg"
-    sleep 15
+	echo2 "$warnmsg"
+	sleep 15
 fi
 
 

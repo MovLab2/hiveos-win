@@ -39,7 +39,7 @@ function do_command () {
 			if [[ ! -z $config && $config != "null" ]]; then
 				#scan for password change
 				echo "$config" > /tmp/rig.conf.new
-        sed -i 's/\r$//' /tmp/rig.conf.new
+				sed -i 's/\r$//' /tmp/rig.conf.new
 				while read line; do
 					[[ $line =~ ^RIG_PASSWD=\"(.*)\" ]] && NEW_PASSWD=${BASH_REMATCH[1]} && break
 				done < /tmp/rig.conf.new
@@ -255,9 +255,6 @@ function do_command () {
 	#Flush buffers if any files changed
 	sync
 }
-
-
-
 
 
 

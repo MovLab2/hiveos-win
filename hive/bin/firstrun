@@ -152,6 +152,3 @@ FILEEOF
 
 	echo -e "${RED}Sorry, id and password did not work, check and try again${NOCOLOR}\n"
 done
-
-
-

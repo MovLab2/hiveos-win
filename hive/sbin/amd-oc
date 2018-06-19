@@ -41,7 +41,7 @@ done
 [[ ! -z $CORE_VDDC ]] &&
 CORE_VDDC=($CORE_VDDC) &&
 for (( i=${#CORE_VDDC[@]}; i < $n; ++i )); do
-  CORE_VDDC[$i]=${CORE_VDDC[$i-1]}
+	CORE_VDDC[$i]=${CORE_VDDC[$i-1]}
 done
 
 #[[ - z $CORE_STATE ]] && CORE_STATE="5" #default is 5

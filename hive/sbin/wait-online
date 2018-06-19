@@ -23,14 +23,14 @@ pingcheck() {
 
 # Do you want a timeout ?
 for i in {1..30}; do
-  pingcheck $host &&
+	pingcheck $host &&
 	echo2 "${GREEN}Network is online${NOCOLOR}" &&
-  	exit 0
+		exit 0
 
-  [[ $i -ge 5 ]] &&
-  	echo2 "Waiting for online... $i"
+	[[ $i -ge 5 ]] &&
+		echo2 "Waiting for online... $i"
 
-  sleep 1
+	sleep 1
 done
 
 
