@@ -1,0 +1,77 @@
+#! /bin/sh
+#
+# inet          Start TCP/IP networking services. This script
+#               starts the Internet Network Daemon.
+#
+# Author:       Miquel van Smoorenburg, <miquels@drinkel.nl.mugnet.org>
+#               Various folks at Red Hat
+#
+# chkconfig: 345 50 50
+# description: The internet superserver daemon (commonly called inetd) \
+#              starts a variety of other internet services as needed. It \
+#              is responsible for starting many services, including telnet, \
+#              ftp, rsh, and rlogin. Disabling inetd disables all of the \
+#              services it is responsible for.
+# processname: inetd
+# pidfile: /var/run/inetd.pid
+# config: /etc/sysconfig/network
+# config: /etc/inetd.conf
+
+
+# Source function library.
+. /etc/rc.d/init.d/functions
+
+## Get config.
+## test -f /etc/sysconfig/network && . /etc/sysconfig/network
+#
+## Check that networking is up.
+#if [ ${NETWORKING} = "no" ]
+#then
+#	exit 0
+#fi
+
+[ -f /usr/sbin/inetd ] || exit 0
+[ -f /etc/inetd.conf ] || exit 0
+
+RETVAL=0
+
+# See how we were called.
+case "$1" in
+  start)
+	echo -n "Starting INET services: "
+	daemon inetd -T
+	RETVAL=$?
+
+	echo
+	[ $RETVAL -eq 0 ] && touch /var/lock/subsys/inetd
+	;;
+  stop)
+	#echo -n "Stopping INET services: "
+        logger "Stopping INET services: "
+	killproc inetd 
+	RETVAL=$?
+
+	#echo
+        logger "RETVAL=$RETVAL"
+	[ $RETVAL -eq 0 ] && rm -f /var/lock/subsys/inetd
+	;;
+  status)
+	status inetd
+	RETVAL=$?
+	;;
+  restart)
+  	$0 stop
+	$0 start
+	RETVAL=$?
+	;;
+  reload)
+	killall -HUP inetd
+	RETVAL=$?
+	;;
+  *)
+	echo "Usage: inet {start|stop|status|restart|reload}"
+	exit 1
+esac
+
+exit $REVAL
+

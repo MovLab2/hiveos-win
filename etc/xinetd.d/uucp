@@ -1,0 +1,11 @@
+service uucp
+{
+	flags			= NAMEINARGS IPv4
+	disable			= yes
+	socket_type             = stream
+	wait                    = no
+	user                    = cyg_server
+	server                  = /usr/sbin/tcpd
+	server_args		= /usr/sbin/uucpd
+}
+

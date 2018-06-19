@@ -1,0 +1,338 @@
+#!/bin/bash
+#
+# iu-config, Copyright 2001, 2005 Red Hat Inc.
+#
+# This file is part of the Cygwin port of Berkley inetutils.
+
+# ======================================================================
+# Initialization
+# ======================================================================
+PROGNAME=$(basename $0)
+_tdir=$(dirname $0)
+PROGDIR=$(cd $_tdir && pwd)
+
+_required_csih_version=0.9.7
+CSIH_SCRIPT=/usr/share/csih/cygwin-service-installation-helper.sh
+
+# Subdirectory where the new package is being installed
+PREFIX=/usr
+
+# Directory where the config files are stored
+SYSCONFDIR=/etc
+
+# Directory where the state files are stored
+LOCALSTATEDIR=/var
+
+source ${CSIH_SCRIPT}
+if ! csih_version_ge $csih_VERSION $_required_csih_version
+then
+  iuVER=$(cygcheck -cd inetutils | sed -n -e '/inetutils/p' | awk '{print $2}')
+  csih_error_multi "iu-config version $iuVER requires csih-$_required_csih_version"
+    "or above. You have csih-${csih_VERSION}. Please update the csih package."
+fi
+
+
+if csih_cygver_is_oneseven
+then
+  cygwin_value=""
+else
+  cygwin_value="ntsec smbntsec"
+fi
+password_value=
+
+# ======================================================================
+# Routine: install_service
+#   Install inetd as a service
+# ======================================================================
+install_service() {
+  local run_service_as
+  local password
+  local force_arg
+  local user_arg
+
+  if [ "$opt_force" == "yes" ]
+  then
+    force_arg=-f
+  fi
+  if [ -n "$opt_default_service_acct" ]
+  then
+    user_arg=-u
+  fi
+
+  if ! cygrunsrv -Q inetd >/dev/null 2>&1
+  then
+    csih_inform "Note that the inetd service and the xinetd service must not"
+    csih_inform "both be active at the same time.  The easiest way to ensure"
+    csih_inform "this is to only install one or the other as a service."
+    if csih_request "Do you want to install the inetd super-server as a service?"
+    then
+      csih_get_cygenv "${cygwin_value}"
+      if ! csih_is_nt2003
+      then
+        if [ "$csih_FORCE_PRIVILEGED_USER" != "yes" ]
+        then
+          # we won't create a new user, but this will initialize
+          # csih so that IF one already exists, csih_service_should_run_as
+          # will return that user.
+          csih_select_privileged_username $force_arg $user_arg "$opt_default_service_acct"
+        else
+          csih_inform "You have requested that a special privileged user be used"
+          csih_inform "by the service, and are running on Windows NT, 2k or XP where"
+          csih_inform "this is not actually required (LocalSystem would also work)."
+          csih_inform "This script will help you create the necessary privileged"
+          csih_inform "user, or to select one that already exists."
+          echo
+        fi
+      else
+        csih_inform "On Windows XP 64bit, Windows Server 2003, Windows Vista, and"
+        csih_inform "above, the SYSTEM account cannot setuid to other users -- a"
+        csih_inform "capability inetd requires.  You need to have or to create a"
+        csih_inform "privileged account.  This script will help you do so."
+        echo
+      fi
+      if ( csih_is_nt2003 || [ "$csih_FORCE_PRIVILEGED_USER" = "yes" ] )
+      then
+        csih_select_privileged_username $force_arg $user_arg "$opt_default_service_acct"
+        if ! csih_create_privileged_user "${password_value}"
+        then
+          csih_error_recoverable "There was a serious problem creating a privileged user."
+          csih_request "Do you want to proceed anyway?" || exit 1
+        fi
+      fi
+
+      # never returns empty if NT or above
+      run_service_as=$(csih_service_should_run_as)
+
+      if [ "${run_service_as}" = "${csih_PRIVILEGED_USERNAME}" ]
+      then
+        password="${csih_PRIVILEGED_PASSWORD}"
+        if [ -z "${password}" ]
+        then
+          csih_get_value "Please enter the password for user '${run_service_as}':" "-s"
+          password="${csih_value}"
+        fi
+      fi
+
+      # at this point, we either have $run_service_as = "system" and
+      # $password is empty, or $run_service_as is some privileged user
+      # and (hopefully) $password contains the correct password.  So,
+      # from here out, we use '-z "${password}"' to discriminate the
+      # two cases.
+
+      csih_check_user "${run_service_as}"
+
+      if [ -z "${password}" ]
+      then
+        if cygrunsrv -I inetd -d "CYGWIN inetd" -p /usr/sbin/inetd -a "-D" -y tcpip \
+          -e CYGWIN="${csih_cygenv}"
+        then
+          echo ""
+          csih_inform "The inetd service has been installed under the LocalSystem"
+          csih_inform "account (also known as SYSTEM). To start the service now, call"
+          csih_inform "\`net start inetd' or \`cygrunsrv -S inetd'.  Otherwise, it"
+          csih_inform "will start automatically after the next reboot."
+          echo ""
+          csih_inform "Check ${SYSCONFDIR}/inetd.conf, ${SYSCONFDIR}/inetd.d/, and"
+          csih_inform "/usr/share/doc/Cygwin/inetutils-X.Y.Z.README before"
+          csih_inform "starting the service!"
+        fi
+      else
+        if cygrunsrv -I inetd -d "CYGWIN inetd" -p /usr/sbin/inetd -a "-D" -y tcpip \
+           -e CYGWIN="${csih_cygenv}" -u "${run_service_as}" -w "${password}"
+        then
+          echo ""
+          csih_inform "The inetd service has been installed under the '${run_service_as}'"
+          csih_inform "account.  To start the service now, call \`net start inetd' or"
+          csih_inform "\`cygrunsrv -S inetd'.  Otherwise, it will start automatically"
+          csih_inform "after the next reboot."
+          echo ""
+          csih_inform "Check ${SYSCONFDIR}/inetd.conf, ${SYSCONFDIR}/inetd.d/, and"
+          csih_inform "/usr/share/doc/Cygwin/inetutils-X.Y.Z.README before"
+          csih_inform "starting the service!"
+        fi
+      fi
+
+      # now, if successfully installed, set ownership of the affected files 
+      if cygrunsrv -Q inetd >/dev/null 2>&1
+      then
+        chown "${run_service_as}".544 "${SYSCONFDIR}/ftpusers"
+        chown "${run_service_as}".544 "${SYSCONFDIR}/ftpwelcome"
+        chown "${run_service_as}".544 "${SYSCONFDIR}/inetd.conf"
+        chown "${run_service_as}".544 "${SYSCONFDIR}/motd"
+        chown "${run_service_as}".544 "${SYSCONFDIR}/shells"
+        chown "${run_service_as}".544 "${SYSCONFDIR}/inetd.d"
+        chown "${run_service_as}".544 "${LOCALSTATEDIR}/empty"
+        # group = Users, not Administrators, for wtmp
+        chown "${run_service_as}".545 "${LOCALSTATEDIR}/log/wtmp"
+        chmod g+w "${LOCALSTATEDIR}/log/wtmp"
+        if [ -f ${LOCALSTATEDIR}/log/inetd.log ]
+        then
+          chown "${run_service_as}".544 "${LOCALSTATEDIR}/log/inetd.log"
+        fi
+      else
+        csih_warning "Something went wrong installing the inetd service."
+      fi
+    fi # user allowed us to install as service
+  fi # service not yet installed
+} # --- End of install_service --- #
+
+# ======================================================================
+# Routine: perms_conf_file
+# ======================================================================
+perms_conf_file() {
+  local conf_file=$1
+  chmod 644 "${conf_file}" >&/dev/null || /bin/true
+  setfacl -m u:system:rw- "${conf_file}" >& /dev/null || /bin/true
+  setfacl -m g:544:rw- "${conf_file}" >& /dev/null || /bin/true
+  csih_check_access "${conf_file}" "rw."
+} # --- End of perms_conf_file --- #
+
+# ======================================================================
+# Main Entry Point
+# ======================================================================
+
+
+# Check how the script has been started.  If
+#   (1) it has been started by giving the full path and
+#       that path is /etc/postinstall, OR
+#   (2) Otherwise, if the environment variable
+#       IU_CONFIG_AUTO_ANSWER_NO is set
+# then set auto_answer to "no".  This allows automatic
+# creation of the config files in /etc w/o overwriting
+# them if they already exist.  In both cases, color
+# escape sequences are suppressed, so as to prevent
+# cluttering setup's logfiles.
+if [ "$PROGDIR" = "/etc/postinstall" ]
+then
+  csih_auto_answer="no"
+  csih_disable_color
+fi
+if [ -n "${IU_CONFIG_AUTO_ANSWER_NO}" ]
+then
+  csih_auto_answer="no"
+  csih_disable_color
+fi
+
+# ======================================================================
+# Parse options
+# ======================================================================
+while :
+do
+  case $# in
+  0)
+    break
+    ;;
+  esac
+
+  option=$1
+  shift
+
+  case "$option" in
+  -d | --debug )
+    set -x
+    csih_trace_on
+    ;;
+
+  -y | --yes )
+    csih_auto_answer=yes
+    opt_force=yes
+    ;;
+
+  -n | --no )
+    csih_auto_answer=no
+    opt_force=yes
+    ;;
+
+  -c | --cygwin )
+    cygwin_value="$1"
+    shift
+    ;;
+
+  -w | --pwd )
+    password_value="$1"
+    shift
+    ;;
+
+  -p | --privileged )
+    csih_FORCE_PRIVILEGED_USER=yes
+    ;;
+
+  --service-account )
+    opt_default_service_acct="$1"
+    shift
+    ;;
+
+  *)
+    echo "usage: ${PROGNAME} [OPTION]..."
+    echo
+    echo "This script creates the basic inetutils configuration."
+    echo
+    echo "Options:"
+    echo "    --debug       -d          Enable shell's debug output."
+    echo "    --yes         -y          Answer all questions with \"yes\" automatically."
+    echo "    --no          -n          Answer all questions with \"no\" automatically."
+    echo "    --cygwin -c <options>     Use \"options\" as value for CYGWIN environment var."
+    echo "    --pwd    -w <passwd>      Use \"pwd\" as password for privileged user."
+    echo "    --privileged  -p          On Windows NT/2k/XP, force creation of privileged"
+    echo "                              user. (Default behavior on those platforms is to"
+    echo "                              use a privileged account if one already exists,"
+    echo "                              but otherwise to use LocalSystem for the inetd"
+    echo "                              service)."
+    echo "    --service-account <name>  Install inetd to run using the specified account,"
+    echo "                              unless inetd is already installed under some other"
+    echo "                              account"
+    echo ""
+    exit 1
+    ;;
+
+  esac
+done
+
+# ======================================================================
+# Action!
+# ======================================================================
+
+# explicitly invoke _csih_setup early, to ensure basic directories
+# exist and have correct permissions (/etc, /var/[log|run|empty])
+_csih_setup
+
+
+# Create /etc/inet.d
+csih_make_dir "${SYSCONFDIR}/inetd.d" "Cannot create directory for inetd configuration files."
+chmod 775 "${SYSCONFDIR}/inetd.d" >& /dev/null || /bin/true
+setfacl -m u:system:rwx "${SYSCONFDIR}/inetd.d" >& /dev/null || /bin/true
+setfacl -m g:544:rwx "${SYSCONFDIR}/inetd.d" >& /dev/null || /bin/true
+csih_check_access "${SYSCONFDIR}/inetd.d" "rwx"
+csih_check_dir_perms "${SYSCONFDIR}/inetd.d" "drwxr.xr.x"
+
+# Create /var/log/wtmp
+csih_make_dir "${SYSCONFDIR}/inetd.d" "Cannot create directory for inetd configuration files."
+if [ ! -e "${LOCALSTATEDIR}/log/wtmp" ]
+then
+  touch "${LOCALSTATEDIR}/log/wtmp"
+fi
+if [ ! -f "${LOCALSTATEDIR}/log/wtmp" ]
+then
+  csih_warning "${LOCALSTATEDIR}/log/wtmp is not a regular file"
+fi
+# set default permissions. install_service may add additional ACLs
+chmod 744 "${LOCALSTATEDIR}/log/wtmp" >& /dev/null || /bin/true
+setfacl -m u:system:rwx "${LOCALSTATEDIR}/log/wtmp" >& /dev/null || /bin/true
+setfacl -m g:544:rwx "${LOCALSTATEDIR}/log/wtmp" >& /dev/null || /bin/true
+csih_check_access "${LOCALSTATEDIR}/log/wtmp" "rw."
+
+# ensure permissions and ownership of configuration
+# files is correct
+perms_conf_file "${SYSCONFDIR}/ftpusers"
+perms_conf_file "${SYSCONFDIR}/ftpwelcome"
+perms_conf_file "${SYSCONFDIR}/inetd.conf"
+perms_conf_file "${SYSCONFDIR}/motd"
+perms_conf_file "${SYSCONFDIR}/shells"
+
+# maybe: csih_auto_answer=no will skip,
+# interactive user will get a chance to override
+install_service
+
+echo
+echo "Configuration finished. Have fun!"
+

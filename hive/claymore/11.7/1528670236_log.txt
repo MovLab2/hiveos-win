@@ -1,0 +1,18 @@
+01:37:16:296	1aa4	Check and remove old log files...
+01:37:16:298	1aa4	args: -epool us1.ethpool.org:3333 -ewal 0xD69af2A796A737A103F12d2f0BCC563a13900E6F -epsw x -dpool stratum+tcp://dcr.suprnova.cc:3252 -dwal Redhex.my -dpsw x 
+01:37:16:298	1aa4	
+01:37:16:298	1aa4	ษออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออป
+01:37:16:298	1aa4	บ                Claymore's Dual GPU Miner - v11.7               บ
+01:37:16:298	1aa4	บ              ETH + DCR/SIA/LBC/PASC/BLAKE2S/KECCAK             บ
+01:37:16:298	1aa4	ศออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออผ
+01:37:16:299	1aa4	
+01:37:16:299	1aa4	b583 
+01:37:16:501	1aa4	You specified default wallet address, it is good for tests only, for normal mining you must change it to your wallet address!
+01:37:16:658	1aa4	ETH: 5 pools are specified
+01:37:16:658	1aa4	Main Ethereum pool is us1.ethpool.org:3333
+01:37:16:658	1aa4	DCR: 5 pools are specified
+01:37:16:659	1aa4	Main Decred pool is dcr.suprnova.cc:3252
+01:37:16:665	1aa4	Cannot load OpenCL library, AMD cards will be unavailable
+01:37:16:665	1aa4	cudaGetDeviceCount failed (35, CUDA driver version is insufficient for CUDA runtime version), probably no CUDA devices
+01:37:16:666	1aa4	No NVIDIA CUDA GPUs detected.
+01:37:16:666	1aa4	No AMD OPENCL or NVIDIA CUDA GPUs found, exit

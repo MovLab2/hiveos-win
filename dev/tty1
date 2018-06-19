@@ -1,0 +1,9 @@
+[0;33m
+#####################################################################
+###
+### You have connected monitor to integrated GPU on the motherboard?
+### Don't do this. Connect monitor to the 1st external GPU (in 16x slot).
+### However we will try to continue in 5 seconds.
+###
+#####################################################################
+[0m

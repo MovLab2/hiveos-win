@@ -1,0 +1,184 @@
+#!/bin/bash
+
+if [[ $# < 1 ]]; then
+	echo "Usage: $0 NVIDIA|AMD|list|listjson|listnvidia"
+	exit 1
+fi
+
+[ -t 1 ] && . /hive/bin/colors
+#[[ -t 1 || $2 == "--colors" ]] && . colors
+
+
+AMDMEMINFO_FILE=/tmp/amdmeminfo
+NVIDIASMI_FILE=/tmp/nvidia_smi_info
+
+
+if [[ $1 == "list" || $1 == "listjson" ]]; then
+	#gpu_count_amd=`gpu-detect AMD`
+	#if [[ $gpu_count_amd > 0 ]]; then
+	#	[[ ! -f $AMDMEMINFO_FILE ]] && amdmeminfo -q -s > $AMDMEMINFO_FILE
+	#fi
+
+	#| sed "s/VGA compatible controller: //" \
+	#| sed "s/Advanced Micro Devices, Inc. //" \
+	#| sed "s/NVIDIA Corporation //"
+	#| grep --color -P "\[(GeForce|Radeon).*?\]"
+
+	filterGrep=""
+	if [[ ! -z $2 && $2 == "AMD" ]]; then
+		list=`lspci | grep -E "VGA|3D controller" | grep "Advanced Micro Devices"`
+	elif [[ ! -z $2 && $2 == "NVIDIA" ]]; then
+		list=`lspci | grep -E "VGA|3D controller" | grep "NVIDIA" | grep -v "nForce"`
+	else
+		list=`lspci | grep -E "VGA|3D controller"`
+	fi
+	gpus=()
+
+	eval . /hive/sbin/gpu-z-stat
+	#GPU-Z.exe -dump c:/cygwin64/tmp/gpu-detect.xml
+#	rdom () { local IFS=\> ; read -d \< E C ;}
+#	gpu=""
+#	gpuz() {                             
+#		if [[ -e /tmp/gpu-detect.xml ]]; then
+#			loc="1"
+#			while rdom; do
+#				if [[ $E = "location" ]]; then
+#					if [[ "$1" != $C ]]; then
+#						loc="0"
+#					else
+#						gpu=""
+#						declare -A gpu
+#						loc="1"
+#						gpu=( ["location"]=$C )
+#					fi      
+#				elif [[ $E = "cardname" && $loc = "1" ]]; then
+#					gpu+=( ["cardname"]=$C )
+#				elif [[ $E = "gpuname" && $loc = "1" ]]; then
+#					gpu+=( ["gpuname"]=$C )
+#				elif [[ $E = "subvendor" && $loc = "1" ]]; then
+#					gpu+=( ["subvendor"]=$C )
+#				elif [[ $E = "memsize" && $loc = "1" ]]; then
+#					gpu+=( ["memsize"]=$C )
+#				elif [[ $E = "biosversion" && $loc = "1" ]]; then
+#					gpu+=( ["biosversion"]=$C )
+#				elif [[ $E = "businterface" && $loc = "1" ]]; then
+#					gpu+=( ["businterface"]=$C )
+#				elif [[ $E = "memtype" && $loc = "1" ]]; then
+#					gpu+=( ["memtype"]=$C )
+#				elif [[ $E = "memvendor" && $loc = "1" ]]; then
+#					gpu+=( ["memvendor"]=$C )
+#				elif [[ $E = "driverversion" && $loc = "1" ]]; then
+#					gpu+=( ["driverversion"]=$C )
+#				fi
+#			done < /tmp/gpu-detect.xml
+#		fi
+#		declare -p gpu
+#	}
+
+
+
+	gpu_brand_i=-1
+	while read -r s; do
+		unset gputype
+		[[ $s =~ "NVIDIA" && ! $s =~ "nForce" ]] && gputype="NVIDIA" && COLOR=$GREEN && gpu_brand_i=$((gpu_brand_i+1))
+		[[ $s =~ "Advanced Micro Devices" ]] && gputype="AMD" && COLOR=$RED && gpu_brand_i=$((gpu_brand_i+1))
+
+		#[[ $s =~ ^([0-9a-z:.]+).*\[(.+)\] ]]
+		#re='^([0-9a-z\:\.]+) VGA compatible controller: (.*)$'
+		re='^([0-9a-z\:\.]+) (VGA compatible|3D) controller: (.*)$'
+		[[ $s =~ $re ]]
+		busid=${BASH_REMATCH[1]}
+		name=${BASH_REMATCH[3]}
+		additional=""
+		gpuz_busid=$(echo "$busid" | sed 's/\./\:/g' | sed 's/\:0/\:/g; s/^0//' | sed 's/\:\:/\:0\:/; s/:$/\:0/')
+		eval $(gpuz "$gpuz_busid")
+		
+		#echo $s
+		#echo $busid
+
+		if [[ $gputype == "AMD" ]]; then
+			#echo $busid
+			#echo $cpuz_busid
+			#echo ${gpu[@]}
+			#echo ${gpu["cardname"]}
+			mem=${gpu["memsize"]}
+			memtype=${gpu["memvendor"]}" "${gpu["memtype"]}
+			name_gpu=${gpu["cardname"]}" "${gpu["subvendor"]}
+			#mem=`dmesg | grep -oE "amdgpu 0000:${busid}: VRAM:\s.*" | sed -n 's/.*VRAM:\s\([0-9MG]\+\).*/\1/p'`
+			additional=" ($mem, ${gpu["biosversion"]}, $memtype)"
+				gpujson=`jq -n -c --arg busid "$busid" --arg name "$name_gpu" --arg brand "amd" --arg vbios "${gpu["biosversion"]}" --arg mem_type "$memtype" '{$busid, $name, $brand, $vbios, $mem_type}'`
+				#echo $gpujson
+			if [[ $1 == "listjson" ]]; then
+				[[ ! -z $mem ]] && gpujson=`echo $gpujson | jq -c --arg mem "$mem" '. + {$mem}'`
+				gpus+=("$gpujson")
+				continue
+			fi
+		elif [[ $gputype == "NVIDIA" ]]; then
+			[[ ! -f $NVIDIASMI_FILE ]] &&
+				nvidia-smi --query-gpu=gpu_bus_id,gpu_name,memory.total,power.min_limit,power.default_limit,power.max_limit --format=csv,noheader > $NVIDIASMI_FILE
+			#00000000:05:00.0, GeForce GTX 1080 Ti, 11172 MiB, 300.00 W
+			#00000000:06:00.0, GeForce GTX 1060 6GB, 6072 MiB, 140.00 W			nvidiainfo=`cat $NVIDIASMI_FILE | grep "00000000:$busid, "`
+			#00000000:0C:00.0, GeForce GTX 1080, 8114 MiB, 326.00 W
+			#00000000:01:00.0, GeForce GTX 1050 Ti, 4038 MiB, 52.50 W, 120.00 W, 130.00 W
+			nvidiainfo=`cat $NVIDIASMI_FILE | grep -i "00000000:$busid, "` #ignore busid case
+			if [[ ! -z $nvidiainfo ]]; then
+				#shity fucking bash array, just get line by number. ebis ono provalis
+				#nvidiainfo=`echo $nvidiainfo | sed -e 's/,\s/\n/g'` #split by ", "
+				#name=`echo "$nvidiainfo" | sed '2q;d'` #get line by number
+				#mem=`echo "$nvidiainfo" | sed '3q;d'`
+				#plim_max=`echo "$nvidiainfo" | sed '4q;d'`
+				memtype=${gpu["memvendor"]}" "${gpu["memtype"]}
+				#name=`awk -F', ' '{print $2}' <<< $nvidiainfo`
+				name=${gpu["cardname"]}" "${gpu["subvendor"]}
+				mem=`awk -F', ' '{print $3}' <<< $nvidiainfo`
+				plim_min=`awk -F', ' '{print $4}' <<< $nvidiainfo`
+				plim_def=`awk -F', ' '{print $5}' <<< $nvidiainfo`
+				plim_max=`awk -F', ' '{print $6}' <<< $nvidiainfo`
+
+				vbios=""
+				#[[ -e /proc/driver/nvidia/gpus/0000:$busid/information ]] &&
+				#	vbios=`cat /proc/driver/nvidia/gpus/0000:$busid/information | grep "Video BIOS" | awk '{print $3}'`
+
+				additional=" ($mem, $plim_def)"
+				if [[ $1 == "listjson" ]]; then
+					gpus+=(`jq -n -c --arg busid "$busid" --arg name "$name" --arg brand "nvidia" \
+						--arg mem "$mem" --arg vbios "${gpu["biosversion"]}" --arg mem_type "$memtype" \
+						--arg plim_min "$plim_min" --arg plim_def "$plim_def" --arg plim_max "$plim_max" \
+						'{$busid, $name, $brand, $mem, $vbios, $mem_type, $plim_min, $plim_def, $plim_max}'`)
+					continue
+				fi
+			fi
+		else #unknown type
+			#[[ $1 == "listjson" ]] && continue #we don't need internal gpu in report
+			COLOR=$YELLOW
+		fi
+
+		#default construction
+		if [[ $1 == "listjson" ]]; then
+			gpus+=(`jq -n -c --arg busid "$busid" --arg name "$name" --arg brand "cpu" '{$busid, $name, $brand}'`)
+			continue
+		fi
+
+		[[ $gpu_brand_i -ge 0 ]] && gpu_index=`printf "%2d" $gpu_brand_i` || gpu_index="  "
+		echo -e "${BLUE}${gpu_index}${NOCOLOR} $busid ${COLOR}$name${NOCOLOR}$additional"
+	done <<<"$list"
+
+	if [[ $1 == "listjson" ]]; then
+		echo "${gpus[@]}" | jq --slurp . #| jq --slurp -c .
+	fi
+
+
+	exit 0
+elif [[ $1 == "listnvidia" ]]; then
+	list=`nvidia-smi --query-gpu=gpu_bus_id,gpu_name --format=csv,noheader`
+	while read -r s; do
+		echo $s | sed -e "s/^00000000://" | sed -e "s/,\s/ /"
+	done <<<"$list"
+	exit 0
+fi
+
+
+
+#default, just grep
+lspci | grep -E "(VGA|3D controller).*$1" | wc -l
+#GPU-Z.exe -dump c:/cygwin64/tmp/gpu-detect.xml

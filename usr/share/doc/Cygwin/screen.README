@@ -1,0 +1,263 @@
+======
+screen
+======
+
+Screen is a full-screen window manager that multiplexes a physical terminal
+between several processes, typically interactive shells. Each virtual terminal
+provides the functions of the DEC VT100 terminal and, in addition, several
+control functions from the ANSI X3.64 (ISO 6429) and ISO 2022 standards (e.g.,
+insert/delete line and support for multiple character sets). There is a
+scrollback history buffer for each virtual terminal and a copy-and-paste
+mechanism that allows the user to move text regions between windows. When screen
+is called, it creates a single window with a shell in it (or the specified
+command) and then gets out of your way so that you can use the program as you
+normally would. Then, at any time, you can create new (full-screen) windows with
+other programs in them (including more shells), kill the current window, view a
+list of the active windows, turn output logging on and off, copy text between
+windows, view the scrollback history, switch between windows, etc. All windows
+run their programs completely independent of each other. Programs continue to
+run when their window is currently not visible and even when the whole screen
+session is detached from the users terminal.
+
+Full documentation for screen is available from "man screen" or,
+probably more usefully, "info screen".
+
+Source homepage:     http://www.gnu.org/software/screen/
+Source download:     http://mirrors.kernel.org/gnu/screen/screen-4.2.1.tar.gz
+Cygwin maintainer:   Andrew Schulman <schulman.andrew@epa.gov>
+License:             GPL; see COPYING for details.
+
+Please address questions and bug reports to the Cygwin mailing list
+<cygwin@cygwin.com>.
+
+-------------------------------------------------------------------------
+
+Cygwin-specific notes for screen:
+
+screen has been reported to work well inside the following terminals
+in Cygwin:
+
+  mintty
+  rxvt
+  xterm
+
+If you use screen in a DOS console, you will be able to detach sessions, but
+reattaching to them later is likely to fail.  Then you'll have to use 'screen
+-wipe' to clear out your old unusable sessions, and you may have to manually
+kill their child processes.
+
+screen may or may not work well with other terminals in Cygwin.
+Please post test reports to the Cygwin mailing list.
+
+-------------------------------------------------------------------------
+
+256-color support:
+
+screen includes 256-color terminal support.  To use it, you have to set your
+terminal type to a 256-color variant, both outside and inside of screen.  A
+simple way to do this is by invoking screen as e.g.
+
+TERM=xterm-256color screen -T screen-256color
+
+The correct value of TERM depends on your terminal type, and is
+believed to be well described by
+
+  case $TERM in
+    xterm)  TERM=xterm-256color ;; # for xterm, PuTTY, MinTTY
+    rxvt)   TERM=rxvt-256color  ;; # for rxvt
+    cygwin) ;; # DOS terminal - fewer than 16 colors are supported
+  esac
+
+You might be able to set the above permanently in your environment,
+i.e. by putting it into your .bashrc file, without any ill effects.
+If you know of any additions or corrections to the above logic, please
+post the information to the Cygwin mailing list.
+
+To avoid having to specify '-T screen-256color' every time, you can
+put
+
+term screen-256color
+
+into your .screenrc or /etc/screenrc file.  Again this will be fine as
+long as any terminal that you run screen in supports 256 colors, but
+it may cause display problems otherwise.  The best way to find out is
+just to try it.
+
+Once you've started screen as above, you can check whether 256 colors are
+available by running /usr/share/screen/256colors.pl.  Instructions at the
+bottom of the output will help you to determine how many colors your
+terminal supports.
+
+As of June 2013, 256-color support seems to work pretty reliably in Cygwin.
+Test reports are welcome on the Cygwin mailing list.
+
+-------------------------------------------------------------------------
+
+FAT file system warning:
+
+If your /tmp directory is stored on a FAT file system, you won't be
+able to reattach to screen sessions after you detach from them.  The
+reason is that to preserve the security of your session, screen
+requires that restrictive permissions be set on the directory where it
+stores its socket files, in /tmp/uscreens by default.  But the FAT
+file system doesn't support file permissions at all, so it's incapable
+of setting the permissions tightly enough.  If this is your case, then
+when you try to reattach to a detached session, screen will give you
+the following unhelpful error message:
+
+	There is a screen on:
+	There is no screen to be resumed.
+
+You can use the 'mount' command to see which type of file system your
+root directory is stored on:
+
+	mount | grep 'on / '
+
+(or mount | grep 'on /tmp ' in case you've mounted a separate file
+system on /tmp).  If the result says the type is fat, fat32, vfat, or
+some other kind of fat, then you won't be able to reattach to screen
+sessions.
+
+To solve this problem, you need to tell screen to store its socket
+files in a directory on a file system that does support file
+permissions, such as NTFS.  For example, you could put the following
+in your ~/.bash_login file:
+
+	export SCREENDIR=/cygdrive/c/WINDOWS/Temp/screen/$USER
+
+assuming that C:/Windows/Temp/screen/$USER is an existing NTFS
+directory where you have write permission.  Another solution would be
+to mount an NTFS directory as your /tmp directory, e.g. by putting
+
+	C:/WINDOWS/Temp /tmp some_fs binary 0 0
+
+into /etc/fstab or /etc/fstab.d/$USER.  See mount(1).
+
+For discussion of this problem, plus some bo[ng]us arguments about the
+Romans, see http://thread.gmane.org/gmane.os.cygwin/126639.
+
+-------------------------------------------------------------------------
+
+Runtime requirements:
+  crypt
+  cygwin
+  libncurses8
+
+Build requirements:
+  binutils
+  coreutils
+  cygport
+  gcc
+  make
+  libncurses-devel
+
+Build instructions:
+  tar -Jxf screen-4.2.1-2-src.tar.xz
+    if you use setup to install this src package, it will be
+    unpacked under /usr/src automatically
+  cd /usr/src
+  cygport screen.cygport all
+
+This will create:
+  /usr/src/screen-4.2.1-2.tar.xz
+  /usr/src/screen-4.2.1-2-src.tar.xz
+
+Or use 'cygport screen.cygport prep' to get a patched source
+directory.
+
+-------------------------------------------------------------------------
+
+Files included in the binary distribution:
+
+  /etc/defaults/etc/screenrc
+  /etc/postinstall/screen.sh
+  /etc/preremove/screen.sh
+  /usr/bin/screen
+  /usr/share/doc/Cygwin/screen.README (this file)
+  /usr/share/doc/screen/COPYING
+  /usr/share/doc/screen/ChangeLog
+  /usr/share/doc/screen/FAQ
+  /usr/share/doc/screen/NEWS
+  /usr/share/doc/screen/README
+  /usr/share/doc/screen/README.Cygwin (this file)
+  /usr/share/doc/screen/TODO
+  /usr/share/info/screen.info-1.gz
+  /usr/share/info/screen.info-2.gz
+  /usr/share/info/screen.info-3.gz
+  /usr/share/info/screen.info-4.gz
+  /usr/share/info/screen.info-5.gz
+  /usr/share/info/screen.info.gz
+  /usr/share/man/man1/screen.1.gz
+  /usr/share/screen/256colors.pl
+  /usr/share/screen/utf8encodings/01
+  /usr/share/screen/utf8encodings/02
+  /usr/share/screen/utf8encodings/03
+  /usr/share/screen/utf8encodings/04
+  /usr/share/screen/utf8encodings/18
+  /usr/share/screen/utf8encodings/19
+  /usr/share/screen/utf8encodings/a1
+  /usr/share/screen/utf8encodings/bf
+  /usr/share/screen/utf8encodings/c2
+  /usr/share/screen/utf8encodings/c3
+  /usr/share/screen/utf8encodings/c4
+  /usr/share/screen/utf8encodings/c6
+  /usr/share/screen/utf8encodings/c7
+  /usr/share/screen/utf8encodings/c8
+  /usr/share/screen/utf8encodings/cc
+  /usr/share/screen/utf8encodings/cd
+  /usr/share/screen/utf8encodings/d6
+
+-------------------------------------------------------------------------
+
+Cygwin version history:
+
+2014-09-04  4.2.1-3 (x86 only):
+* Reinstate doc files accidentally left out of 4.2.1-2.
+
+2014-05-15  4.2.1-2:
+* Fix scrolling corruption bug in mintty in x86_64
+  (http://cygwin.com/ml/cygwin/2014-01/msg00223.html)
+  using patch from Shaddy Baddah
+  (http://cygwin.com/ml/cygwin/2014-05/msg00331.html).
+
+2014-05-08  4.2.1-1:
+* New upstream release.
+
+2013-07-03  4.1.0-20130513-2:
+* Restore missing termcapinfo entry for hardstatus line in xterm, rxvt, and
+  Cygwin terminals.
+* Promote to current release.
+
+2013-06-17  4.1.0-20130513-1:
+* Update to upstream git.  First update in 8 years, so there are many fixes
+  and improvements.  This version builds and runs in Cygwin OOTB without all
+  of the patches that were needed in earlier versions, but is initially 
+  considered a "test" release for Cygwin.
+* Vertical split is fully supported upstream, so there's no more need for the
+  patch added in 4.0.3-6, which never worked well anyway.
+
+4.0.3-7:
+* Add warning in README.Cygwin that users won't be able to reattach their
+  sessions if $SCREENDIR (i.e. /tmp/uscreens) is on a FAT file system.
+
+4.0.3-6:
+* Add experimental vertical split feature.  See discussion at
+  http://thread.gmane.org/gmane.os.cygwin/123523.
+
+4.0.3-5:
+* Rebuild with libncurses10.
+
+4.0.3-4:
+* Add 256-color support.
+
+4.0.3-2:
+* Recompile and test for Cygwin 1.7.
+* Remove warning in README about Win9x support. Cygwin itself no
+  longer supports Win9x, so it's moot.
+
+4.0.3-1:
+* Initial Cygwin release.
+* Patch: make several adjustments to allow screen to compile under Cygwin
+(http://cygwin.com/ml/cygwin-apps/2005-04/msg00163.html, and 
+http://cygwin.com/ml/cygwin/2006-09/msg00102.html).
+* Patch: signal processes to exit when a window is killed.

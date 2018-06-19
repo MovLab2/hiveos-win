@@ -1,0 +1,182 @@
+#!/usr/bin/env bash
+#Send stats, receives commands
+
+INTERVAL=10
+RIG_CONF="/hive-config/rig.conf"
+NVIDIA_OC_CONF="/hive-config/nvidia-oc.conf"
+AMD_OC_CONF="/hive-config/amd-oc.conf"
+WALLET_CONF="/hive-config/wallet.conf"
+LOG="/var/log/hive-agent.log"
+
+API_TIMEOUT=15 #timeout to wait for miner API response, can take very long time on 13+ gpus
+
+[ -t 1 ] && . colors
+
+#$PPID - might be parent screen pid
+screen -wipe > /dev/null 2>&1
+sleep 1
+screen_count=`screen -ls | grep "\.agent" | grep -v $PPID | wc -l`
+
+#there will be still 1 process for subshell
+#[[ `ps aux | grep "./agent" | grep -vE "grep|screen|SCREEN|$$" | wc -l` > 1 ]] &&
+[[ $screen_count > 0 ]] &&
+	echo -e "${RED}Agent screen is already running${NOCOLOR}\nRun ${CYAN}agent-screen${NOCOLOR} to resume screen" &&
+	exit 1
+
+
+
+#{"temp":["61","42","41"],"fan":["92","0","0"],"load":["92","0","0"],"busids":["01:00.0","03:00.0","05:00.0"]}
+gpu_stats=
+
+
+#Nvidia indexes in aa [1,2,3] to use in jsons
+#nvidia_indexes=echo "$gpu_stats" | jq '.brand | to_entries[] | select(.value == "nvidia") | .key' | jq -sc '.'
+#nvidia_indexes=`gpu-detect listjson | jq '. | to_entries[] | select(.value.brand == "nvidia") | .key' | jq -sc '.'`
+gpu_detect_json=`gpu-detect listjson`
+amd_indexes_array=`echo "$gpu_detect_json" | jq -c '[ . | to_entries[] | select(.value.brand == "amd") | .key ]'`
+nvidia_indexes_array=`echo "$gpu_detect_json" | jq -c '[ . | to_entries[] | select(.value.brand == "nvidia") | .key ]'`
+cpu_indexes_array=`echo "$gpu_detect_json" | jq -c '[ . | to_entries[] | select(.value.brand == "cpu") | .key ]'`
+
+########################################################################################################################
+
+. agent.miner_stats.sh
+       
+. agent.do_command.sh
+
+########################################################################################################################
+
+function loop {
+	date
+
+	[ ! -f $RIG_CONF ] && echo -e "No config $RIG_CONF" && return
+
+	#each time read config again
+	. $RIG_CONF
+	. $WALLET_CONF
+
+	[ -z $MINER ] && MINER="claymore"
+	HIVE_URL="$HIVE_HOST_URL/worker/api"
+  
+	gpu_stats=`gpu-stats`
+	local temp=$(jq '.temp' <<< $gpu_stats)
+	local fan=$(jq '.fan' <<< $gpu_stats)
+	local power=$(jq '.power' <<< $gpu_stats)
+         
+
+	miner2_json=
+	if [[ ! -z $MINER2 ]]; then
+		miner_stats $MINER2 2
+		khs2=$khs
+		miner2_json=$(jq -n --arg miner2 "$MINER2" --arg total_khs2 "$khs" --argjson miner_stats2 "$stats" \
+			'{"params": {$miner2, $total_khs2, $miner_stats2}}')
+	fi
+         
+	miner_stats $MINER #khs and stats are global
+
+	echo -en "Hashrate ${CYAN}$MINER${NOCOLOR} `[[ $khs > 0 ]] && echo -e ${YELLOW} || echo -e ${RED}`$khs${NOCOLOR} kH/s"
+	[[ ! -z $MINER2 ]] &&
+		echo -en " ${CYAN}$MINER2${NOCOLOR} `[[ $khs2 > 0 ]] && echo -e ${YELLOW} || echo -e ${RED}`$khs2${NOCOLOR} kH/s"
+  echo -en "\n"
+	echo $khs > /run/hive/khs
+
+
+
+	#echo $stats
+	#uptime: load averages for the past 1, 5, and 15 minutes
+  
+	request=$(
+	jq -n \
+	--arg rig_id "$RIG_ID" \
+	--arg passwd "$RIG_PASSWD" \
+	--arg miner "$MINER" \
+	--argjson miner_stats "$stats" \
+	--arg total_khs "$khs" \
+	--argjson temp "$temp" \
+	--argjson fan "$fan" \
+	--argjson power "$power" \
+	--arg df "`df -h / | awk '{ print $4 }' | tail -n 1 | sed 's/%//'`" \
+	--argjson cpuavg "[`cat  /proc/loadavg | sed 's/.\{5\}$//' | sed 's/\ /\, /g' | sed 's/\./,/g'`]" \
+	'{
+		"method": "stats", "jsonrpc": "2.0", "id": 0,
+		"params": {
+			$rig_id, $passwd, $miner, $miner_stats, $total_khs,
+			$temp, $fan, $power, $df, $cpuavg
+		}
+	}'
+	)
+  
+	[[ ! -z $miner2_json ]] && #add miner2 stats to json
+		request=`echo "$request" "$miner2_json" | jq -s '.[0] * .[1]'`
+  
+	echo $request | jq '.' -C -c
+
+  if [[ -z $RIG_ID ]]; then
+		echo -e "${YELLOW}No RIG_ID, skipping sending stats${NOCOLOR}"
+		return
+	fi
+
+	#log request
+	echo "[`date`] > `echo $request | jq '.' -C -c`" >> $LOG
+	#echo "[`date`] > $request" >> $LOG
+
+	response=$(echo "$request" | curl --insecure -L --data @- \
+	--connect-timeout 7 --max-time 15 --silent \
+	-XPOST "${HIVE_URL}?id_rig=$RIG_ID&method=stats"  -H "Content-Type: application/json")
+  
+	exitcode=$?
+	if [[ $exitcode -ne 0 || -z $response ]]; then
+		echo -e "${RED}Error sending stats${NOCOLOR} $HIVE_HOST_URL" && human-curl-error $exitcode
+		echo "[`date`] < ERROR SENDING STATS TO $HIVE_HOST_URL (curl code=$exitcode) \"$response\"" >> $LOG
+		return $exitcode
+	fi
+  
+	#echo $response
+	#echo "[`date`] < `echo $response | jq '.' -c`" >> $LOG
+	echo "[`date`] < $response" >> $LOG #full response even invalid
+  
+	error=$(echo $response | jq '.error | select (.!=null)' --raw-output)
+  [[ $? != 0 ]] && echo -e "${RED}Invalid response${NOCOLOR}: $HIVE_HOST_URL\n$response" && return 1
+  [[ ! -z $error ]] && echo -e "${RED}Error response${NOCOLOR}: $error" && return 1
+  
+	command=$(echo "$response" | jq '.result.command' --raw-output| tr -dc '[:print:]')
+  
+	[[ $command != "OK" ]] && echo "$response" | jq '.result'
+
+	if [[ $command != "batch" ]]; then
+		body=`echo $response | jq -c '.result'`
+		do_command
+	else
+		count=`echo $response | jq '.result.commands|length'`
+		echo "Got $count batch commands"
+		for (( i=0; i < $count; i++ )); do
+			body=`echo $response | jq -c ".result.commands[$i]"`
+			command=
+			do_command
+		done
+	fi
+}
+
+
+########################################################################################################################
+
+echo -e "\n\n[`date`] Started" >> $LOG
+
+while true
+do
+	time_start=`date +%s`
+	loop
+	time_finish=`date +%s`
+
+	wasted=$(( $time_finish - $time_start ))
+
+	tosleep=$(( $INTERVAL - $wasted ))
+
+	#echo "Sleeping $tosleep"
+	echo ""
+
+	if [[ $tosleep > 0 ]]; then
+		sleep $INTERVAL
+	else
+		echo -e "${YELLOW}WARNING: Stats sending interval > $INTERVAL seconds, hanging driver?${NOCOLOR}"
+	fi
+done

@@ -1,0 +1,13 @@
+# default: off
+# description: The talk server accepts talk requests for chatting with users \
+#	on other systems.
+service talk
+{
+	flags			= NAMEINARGS IPv4
+	disable			= yes
+	socket_type		= dgram
+	wait			= yes
+	user			= cyg_server
+	server			= /usr/sbin/tcpd
+	server_args		= /usr/sbin/talkd
+}

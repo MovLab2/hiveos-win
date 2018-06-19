@@ -1,0 +1,437 @@
+This package is the actual port of inetutils-1.3.2 to Cygwin 1.5.x.
+
+The base of that release is the port of Sergey Okhapkin.
+
+Some additional patches are done to allow smooth working with the
+current cygwin release and especially Windows NT service manager and NT
+security.
+
+===========================================================================
+You can find information about how to install inetd and its services 
+later in this document, right after the version changelog.
+===========================================================================
+
+Version 1.3.2-40: Revamp inetd description about how to install it as
+		  service under Windows NT.
+
+Version 1.3.2-39: Fix a security hole in rshd.
+
+Version 1.3.2-38: Change configure.in script so that syslog.exe/logger.exe
+		  doesn't get installed.  logger.exe is provided by the
+		  util-linux package.
+
+Version 1.3.2-37: Bump subversion to help fixing openssh packaging bug.
+
+Version 1.3.2-36: Fix a race problem in rlogin when running in a notty session.
+
+Version 1.3.2-35: Sigh.  Another forced rebuild to fix local build problem.
+
+Version 1.3.2-34: Forced rebuild to fix longstanding(?) local build problem.
+
+		  Change syslogd-config script to deal with existing
+		  syslog-ng installation, in preparation of upcoming
+		  syslog-ng package.
+
+Version 1.3.2-33: Thanks to Bryan Thrall <bryan.thrall@flightsafety.com> for:
+
+		  Add an option -D to inetd, which allows running inetd
+		  under cygrunsrv instead of using inetd's own service
+		  capability.  The advantage of starting inetd under
+		  cygrunsrv is, that you don't have to change the system
+		  environment variable $PATH to run inetd as a service.
+		  For installing inetd the usual way, see description further
+		  down in this document.
+		  For installing inetd under cygrunsrv, you can use this
+		  cygrunsrv command as template:
+
+		  cygrunsrv -I inetd -d "CYGWIN inetd" -p /usr/sbin/inetd -a -D
+
+Version 1.3.2-32: In syslogd, print "kernel" instead of "vmunix" for kernel
+		  log messages.
+
+Version 1.3.2-31: In ftp, fix variable argument handling in call to
+		  command function to avoid SEGVs.
+
+Version 1.3.2-30: Fix HOME environment handling in rshd.
+
+Version 1.3.2-29: "The return of syslogd" release.  Beginning with version
+		  1.5.15, Cygwin started to support syslogging to syslogd.
+
+		  To install syslogd, run the new syslogd-config script which
+		  creates the necessary files to run syslogd and will ask you
+		  if it should install syslogd as service under the SYSTEM
+		  account.  This is the preferred way to install syslogd 
+		  since it will create all files with enough access rights for
+		  SYSTEM.
+
+		  However, if you want to install syslogd as service manually,
+		  use the Cygwin specific -D option (see `man syslogd'):
+
+		    cygrunsrv -I syslogd -p /usr/sbin/syslogd -a -D
+
+		  *Note*: If syslogd doesn't start, that's either a
+		  permission problem on the files and directories syslogd
+		  tries to access (/etc/syslog.conf, /dev, /var/log), or
+		  it's a fault in the /etc/syslog.conf file.  In the former
+		  case, note that syslogd is running under the SYSTEM account,
+		  so use setfacl(1) to give enough permissions to SYSTEM.
+		  In the latter case, first check if you used spaces instead
+		  of tabs.  Replace all spaces outside comments by tabs.
+
+		  Bugfixes in this release:
+		  - Don't permute arguments in rsh.
+		  - Fix weird UTMPX usage in telnetd/sys_term.c.
+
+Version 1.3.2-28: Don't require *any* password for anonymous ftp account.
+		  Use systems ability to switch user context w/o password
+		  for anonymous ftp instead.  'ftp' user entry in /etc/passwd
+		  and real NT user account behind it still required.
+
+Version 1.3.2-27: Always hide console window when started as service on NT
+		  systems.  This hides the annoying console window if inetd
+		  is started with "Allow service to interact with desktop".
+
+Version 1.3.2-26: Don't install libutil.a anymore.  It's dead, Jim.  All
+		  functionality has been implemented in the Cygwin DLL now.
+		  Fix really braindead memory overwrite error in ftp, which
+		  only shows up when nmap is called.
+
+Version 1.3.2-25: Don't install /usr/include/pty.h since that's now part
+		  of the Cygwin base package.
+
+Version 1.3.2-24: Adhere to FHS.  Build for Cygwin 1.5.x from now on.
+
+Version 1.3.2-23: Fixed CERT® Advisory CA-2001-21 Buffer Overflow in telnetd.
+		  See http://www.cert.org/advisories/CA-2001-21.html
+
+Version 1.3.2-22: Thanks to Pierre A. Humblet <Pierre.Humblet@ieee.org> for
+		  pointing this out:
+		  In inetd, don't call AllocConsole on 9x/Me.  This results
+		  in not opening an extra DOS window when starting some native
+		  console applications.
+
+Version 1.3.2-21: In iu-config, add also ksh and pdksh to /etc/shells.
+
+		  Thanks to Pierre A. Humblet <Pierre.Humblet@ieee.org> for
+		  pointing this out:
+		  rlogin used the wrong (old BSD) technique to evaluate the
+		  speed to send to rlogind due to a BSD centric precompiler
+		  directive.  This could lead to a crash.
+
+Version 1.3.2-20: In iu-config, add also zsh to /etc/shells.
+
+                  Thanks to Jason Tishler <jason@tishler.net> for:
+		  Add Cygwin guard to the conditional compilation around
+		  fcntl(F_SETOWN) to prevent the Event Log from filling with
+		  expected failure messages.
+
+Version 1.3.2-19: In ftpd, check username in /etc/ftpusers case insensitive.
+
+Version 1.3.2-18: Thanks to Pavel Tsekov <ptsekov@syntrex.com> for finding this:
+		  In inetd, eliminate creating of environment variable
+		  "inetd_dummy" for Cygwin.
+
+Version 1.3.2-17: Thanks to Ralf Habacker <Ralf.Habacker@freenet.de> for:
+		  Change distributed header files pty.h, talkd.h and tftp.h
+		  C++ clean.
+
+		  Thanks to Chris Faylor <cgf@redhat.com> for:
+		  Fix problem with file descriptors in inetd.
+
+		  Some additional tweaks to configure.in and Makefile.in
+		  to accommodate installation.
+
+Version 1.3.2-16: In rexecd, cleanup sources to use Cygwins setuid features.
+		  Rexecd now works but after finishing the command, some
+		  clients complain about `Connection reset by peer'.
+
+                  Thanks to Chuck Higgins <chuck.higgins@ntlworld.com> for:
+		  Eliminate glitches in rexecd/rexecd.c and talk/msgs.c
+		  to allow compiling with latest Cygwin again.
+
+		  Thanks to Enrico Bernardini <enrico@adm.Unipi.IT> for:
+		  In inetd, fix using wrong datatype (short) for a PID value,
+		  resulting in inetd not restarting service when PID is out
+		  of range for short.
+
+		  In iu-config add option processing for the following
+		  options:
+		  --debug  -d   Enable shell's debug output.
+		  --yes    -y   Answer all questions with "yes" automatically.
+		  --no     -n   Answer all questions with "no" automatically.
+
+		  iu-config is now also copied to /etc/postinstall.  This
+		  means, from now on the config files in /etc are created by
+		  Cygwin's setup.exe on installing/updating inetutils-1.3.2.
+		  The files aren't overwritten if they already exist, though.
+
+		  Change Makefiles and configure files to install everything
+		  now correctly in one go.  Explicitly exclude syslogd when
+		  building for Cygwin.  This excludes syslog.conf.5 from
+		  getting installed, too.
+		  
+		  The description of the configure options used for the
+		  Cygwin build at the end of this file is (finally) correct
+		  now.
+
+		  Latest test show that tftp as well as tftpd are working.
+
+Version 1.3.2-15: New library /usr/lib/libutil.a, exporting BSD compatible
+		  functions iruserok(3), ruserok(3), getusershell(3),
+		  setusershell(3), endusershell(3), revoke(3), logwtmp(3),
+		  openpty(3), forkpty(3), login_tty(3).  New header files
+		  arpa/tftp.h protocols/talkd.h and pty.h.  Add man pages
+		  for new functions.
+
+		  In iu-config, add tcsh to the allowed shells when
+		  creating /etc/shells.  Also allow /usr/bin/<shell>.
+
+		  In ftpd, setuid before chdir to home dir.
+
+		  In inetd, allow to start services now as the user given in
+		  the /etc/inetd.conf service entry.  The user `root' is
+		  treated special since it doesn't trigger a user context
+		  switch.  Example:
+
+		    ftp stream tcp nowait root /usr/sbin/in.ftpd in.ftpd
+
+		  doesn't trigger a user context switch, the ftp daemon
+		  will run under SYSTEM account while in
+
+		    ftp stream tcp nowait john_doe /usr/sbin/in.ftpd in.ftpd
+
+		  inetd will try to run the ftp daemon under the `john_doe'
+		  account.  This will fail if the account `john_doe' isn't
+		  correctly set up in /etc/passwd and /etc/group.  However,
+		  wrong user entries or failed user context switches are
+		  logged in the NT event log so it should be easy to debug.
+
+		  In rlogind, treat uid 18 (= SYSTEM) as root user.
+
+		  In rshd, temporary setuid before chdir to home dir and
+		  reading .rhosts.  Revert more Cygwin specific changes.
+		  Fix parent's loop condition.  Treat uid 18 (= SYSTEM)
+		  as root user.
+
+		  Syslogd isn't any longer part of the binary package since
+		  it doesn't make any sense.
+
+		  In talk, allow user to interrupt the invitation phase.
+		  Revert a useless Cygwin specific change.
+
+		  In uucpd, setuid before chdir to home dir.
+
+Version 1.3.2-14: Revert most of the Cygwin specific patches of the initial
+		  port of rshd. Change the waiting select to check child
+		  state repeatedly to avoid hanging after child's death.
+
+Version 1.3.2-13: Keep current environment when starting a child process
+		  from rshd, except for settings for "USER", "PATH" and
+		  "SHELL".
+		  Slight changes to this README.
+
+Version 1.3.2-12: Correctly reset effective uid to real uid when switching
+		  user context back instead of switching fixed to uid 0.
+
+Version 1.3.2-11: Thanks to Egor Duda <deo@logos-m.ru> for the following:
+		  Call AllocConsole() to keep output of native windows
+		  console applications in the child window.
+
+Version 1.3.2-10: Link ncurses explicitly static.
+		  Fix stderr problem in rshd.
+
+Version 1.3.2-9: Fix a build error which results in a non-functional
+                 talk.
+
+Version 1.3.2-8: Fix a backtick problem in iu-config.
+
+		 Thanks to Steve O'Brien <steve.obrien@tradezone.co.uk>
+		 for pointing this out:
+		 Check argv[0] for valid win32 application name in rlogin
+		 and in rsh. Avoid a possible segmentation fault in rshd.
+
+                 Thanks to Chris Faylor <cgf@redhat.com> for the following:
+		 Eliminate a busy loop from inetd.
+
+Version 1.3.2-7: Remove the configuration files from the archive.
+                 Create them only when /usr/bin/iu-config is started.
+
+		 Thanks to Jason Gouger <jason_gouger@mentorg.com> for
+		 the following:
+		 Fix the annoying port problem of rshd which results
+		 in the inability to reconnect to rshd within 10 minutes.
+
+Version 1.3.2-6: Fix complete_login to allow anonymous ftp to enter
+                 mail address as password.
+
+                 Thanks to Bob Heckel <BHeckel@excite.com> for the following:
+                 Add a security announcement to the README file.
+
+Version 1.3.2-5: Rearrange to use all new features of Cygwin-1.1.3.
+                 Allow anonymous ftp under NT/W2K using special `ftp'
+                 entry in /etc/passwd.
+                 Use 1.1.3 call `chroot' for anonymous ftp.
+                 Fix configure.in, Makefile.in, config.make and rules.make
+                 to support $EXEEXT.
+                 Care for Cygwin specific README file when installing.
+                 Installs default /etc files.
+
+                 Thanks to Eric Fifer <EFifer@sanwaint.com> for the following:
+                 Fix the call to CreateService in inetd.
+                 Fix inetd.c(main) to allow debug mode on NT/W2K.
+
+Version 1.3.2-4: Fixed memory leak in rcp.
+
+Version 1.3.2-3: Fixed file open modes. All ascii configuration files are
+                 opened in textmode now.
+                 Fixed binary mode in ftpd when running in text mount mode.
+                 Additional example files:
+                   /etc/ftpusers
+                   /etc/ftpwelcome
+                   /etc/motd
+                   /etc/shells
+                 Fixed some install traps in various Makefile.in files.
+
+Version 1.3.2-2: Fixed environment problem in rlogind.
+
+Version 1.3.2:   Initial port. Example /etc/inetd.conf file.
+
+How to install inetutils
+========================
+
+- Before starting any program, be aware that all neccessary configuration
+  files in /etc have to be generated first! Call
+
+  	iu-config
+
+  once after you installed the inetutils the first time. That
+  generates some files:
+
+  	/etc/inetd.conf  -  inetd configuration. See man pages.
+	/etc/shells      -  Allowed login shells.
+	/etc/ftpusers    -  List of users not allowed to login.
+	                    Set to "ftp" and "anonymous" by default.
+	/etc/ftpwelcome  -  Message printed to welcome a user at the
+	                    ftp server before login.
+	/etc/motd        -  "message of today", printed by ftp after
+	                    successful login. Also printed by `login(1)'
+			    after successful login.
+
+- To start interactive telnet/rsh/rlogin sessions you need /bin/login.exe
+  which is a separate package (part of the Cygwin standard net distro).
+  On 95/98/Me systems you also need to install the crypt package.
+
+- Installing inetd:
+
+  Under Windows 95/98/Me inetd can be started from a shell prompt or
+  from the autostart folder.
+
+  Under Windows NT inetd must be started from service manager.  To
+  accompish that, you can install inetd as service running under
+  cygrunsrv:
+  
+  cygrunsrv -I inetd -d "CYGWIN inetd" -p /usr/sbin/inetd -a -D
+
+  This way, inetd is running as the SYSTEM (LocalSystem) user who has
+  all required permissions, up to Windows XP.
+  
+  However, beginning with Windows 2003 Server and Windows Vista, the
+  SYSTEM user is lacking the "Create a token object" right, which is
+  required to change the user without providing the password. 
+  
+  On these systems you have to create an admin user account with special
+  additional user rights.  You can use the Cygwin tool "editrights" or
+  the local/domain security policy mmc snap in to set these rights:
+
+	"Create a token object"
+        "Act as part of the operating system"
+        "Replace process level token"
+        "Increase quotas"
+        "Logon as a service"
+
+  There's also another way to install inetd as service.  It allows
+  to run inetd without cygrunsrv:
+
+        inetd --install-as-service
+        inetd --remove-as-service
+
+  However, this always installs inetd as service running under the
+  SYSTEM account, with the above mentioned problems starting with
+  Windows 2003.  This also adds the problem that you have to change the
+  system environment so that The Cygwin /bin directory is in
+  %Path%.  For that reason it's much better to use cygrunsrv to start
+  inetd.
+  
+  After you have installed inetd it will be started automatically on
+  reboot. Manually starting and stopping is possible via
+
+        net start inetd
+        net stop inetd
+
+A few notes on ftp
+==================
+
+- ftpd is now able to change user context with the help of NT security.
+  This is useful mostly when using all features of the ntsec option of
+  cygwin. The 'S-' and 'U-' fields in pw_gecos are taken into account as
+  it's described in the 'login.README' file.
+
+  Anonymous ftp is usable by creating a `ftp' user in /etc/passwd
+  and either create a `ftp' user in the NT user database or by using
+  the aforementioned `S-' and `U-' entries in /etc/passwd together
+  with ntsec ON. If, for example, the cygwin user `ftp' should be
+  attached to the NT user `guest', you can create the ftp user
+  from your guest entry:
+
+  ftp::100:10:U-guest,S-1-5-21-XXX-YYY-ZZZ-501:/home/ftp:/bin/false
+
+  Note that:
+  - The `ftp' entry needs a valid directory.
+  - The attached NT user must not have a password.
+
+  On 9X systems /etc/passwd is checked for DES encrypted passwords
+  as provided by the crypt package.
+
+- ftp reports to be a UNIX system, so binary mode is ON by default
+  with most servers.
+
+Security announcement
+=====================
+
+Please be aware that if you have created your /etc/passwd via mkpasswd -l
+then you may have a security hole.
+
+If your PC has `guest' login enabled in order to allow shares to certain
+directories on your Windows box, your passwd file contains an entry for
+Guest that will allow anyone to ftp, telnet, etc. to your machine simply
+by using user guest and pressing enter for the password. One solution is
+to eliminate the guest account via user manager. The other is to delete
+the guest entry in /etc/passwd if you don't want to use the `guest' user
+for anonymous ftp. In that case you should AT LEAST change the user's shell
+entry in /etc/passwd to something like /bin/false or /bin/date to avoid
+interactive login without password.
+
+How is inetutils configured?
+============================
+
+- The used configure options are:
+    --prefix=/usr \
+    --sysconfdir=/etc \
+    --libexecdir='$(sbindir)' \
+    --localstatedir=/var \
+    --datadir='$(prefix)/share'
+
+  When starting `make' you will see mesages like this:
+
+  ../rules.make:84: target `/usr/sbin' given more than once in the same rule.
+
+  Ignore them.
+
+Please send requests, error reports etc. to the mailing list cygwin@cygwin.com.
+Subscribing is easy by sending an empty email to cygwin-subscribe@cygwin.com.
+
+Have fun,
+
+Corinna Vinschen
+Cygwin Developer
+Red Hat Inc.

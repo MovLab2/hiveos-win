@@ -1,0 +1,56 @@
+#!/usr/bin/env bash
+#Cleans system before cloning
+
+timedatectl set-timezone UTC
+
+/hive/bin/cache-hive-ip
+
+miner stop
+screen -S agent -X quit
+systemctl stop hivex
+
+
+find /hive -type f -name "*.log" -exec rm -f {} \;
+find /hive -type f -name "*.~" -exec rm -f {} \;
+
+
+rm -r /var/log/*
+#rm /var/log/*.1; rm /var/log/*.2; rm /var/log/*.gz; echo "" > /var/log/kern.log; echo "" > /var/log/syslog
+#rm /var/log/*.log
+#rm /var/log/apt/*
+#rm /var/log/hive*
+#rm /var/log/amd-oc.log
+mkdir -p /var/log/journal
+
+
+rm -r /hive-config/*
+cp -r /hive/etc/hive-config.stub/* /hive-config/
+
+
+echo "" > /root/.bash_history
+echo "" > /home/user/.bash_history
+rm -rf /var/tmp/*
+echo "" > /home/user/.ssh/authorized_keys
+
+
+systemctl stop wpa_supplicant@wlan0
+systemctl disable wpa_supplicant@wlan0
+rm /etc/wpa_supplicant/wpa_supplicant.conf
+
+chown -R user:user /hive
+chown -R root:root /hive/etc/logrotate.d/*
+
+
+#no AMD in updates
+rm /etc/apt/sources.list.d/amdgpu-pro.list
+#old DKMS images, they are big!
+rm /boot/*.old-dkms
+#we don't need i386
+rm -rf /opt/amdgpu-pro/lib/i386-linux-gnu
+
+echo "> Filling /hive-config"
+zerofill /hive-config
+echo "> Filling /"
+zerofill /
+echo "Done"
+

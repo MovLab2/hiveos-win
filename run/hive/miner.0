@@ -1,0 +1,576 @@
+]0;~
+[32mАдминистратор@WIN-4SEJG5CBM7A [33m~[0m
+$ ]0;~
+[32mАдминистратор@WIN-4SEJG5CBM7A [33m~[0m
+$ ]0;~
+[32mАдминистратор@WIN-4SEJG5CBM7A [33m~[0m
+$ ]0;~
+[32mАдминистратор@WIN-4SEJG5CBM7A [33m~[0m
+$ ]0;~
+[32mАдминистратор@WIN-4SEJG5CBM7A [33m~[0m
+$ -- 0:bash -- time-stamp -- апр/28/18 11:06:15 --
+]0;~
+[32mАдминистратор@WIN-4SEJG5CBM7A [33m~[0m
+$ [K$ ]0;~
+[32mАдминистратор@WIN-4SEJG5CBM7A [33m~[0m
+$ [K$ k[K]0;~
+[32mАдминистратор@WIN-4SEJG5CBM7A [33m~[0m
+$ ]0;~
+[32mАдминистратор@WIN-4SEJG5CBM7A [33m~[0m
+$ ]0;~
+[32mАдминистратор@WIN-4SEJG5CBM7A [33m~[0m
+$ [K$ ]0;~
+[32mАдминистратор@WIN-4SEJG5CBM7A [33m~[0m
+$ -- 0:bash -- time-stamp -- апр/28/18 11:25:55 --
+]0;~
+[32mАдминистратор@WIN-4SEJG5CBM7A [33m~[0m
+$ [K$ ]0;~
+[32mАдминистратор@WIN-4SEJG5CBM7A [33m~[0m
+$ [K$ 
+]0;~
+[32mАдминистратор@WIN-4SEJG5CBM7A [33m~[0m
+$ 
+]0;~
+[32mАдминистратор@WIN-4SEJG5CBM7A [33m~[0m
+$ 
+]0;~
+[32mАдминистратор@WIN-4SEJG5CBM7A [33m~[0m
+$ scre .-ls
+bash: scre: команда не найдена
+]0;~
+[32mАдминистратор@WIN-4SEJG5CBM7A [33m~[0m
+$ screen.exe  -k[Kls
+There is a screen on:
+	11744.miner	(Attached)
+1 Socket in /tmp/uscreens/S-Администратор.
+]0;~
+[32mАдминистратор@WIN-4SEJG5CBM7A [33m~[0m
+$ screen.exe  -ls[K[K[K[K-r
+There is a screen on:
+	11744.miner	(Attached)
+There is no screen to be resumed.
+]0;~
+[32mАдминистратор@WIN-4SEJG5CBM7A [33m~[0m
+$ screen.exe -r
+There is a screen on:
+	11744.miner	(Attached)
+There is no screen to be resumed.
+]0;~
+[32mАдминистратор@WIN-4SEJG5CBM7A [33m~[0m
+$ screen.exe -r x
+There is no screen to be resumed matching x.
+]0;~
+[32mАдминистратор@WIN-4SEJG5CBM7A [33m~[0m
+$ screen.exe -r x-x[Cx
+Attaching from inside of screen?
+]0;~
+[32mАдминистратор@WIN-4SEJG5CBM7A [33m~[0m
+$ screen.exe -r -xx[2Px-x
+Attaching from inside of screen?
+]0;~
+[32mАдминистратор@WIN-4SEJG5CBM7A [33m~[0m
+$ 
+]0;~
+[32mАдминистратор@WIN-4SEJG5CBM7A [33m~[0m
+$ 
+]0;~
+[32mАдминистратор@WIN-4SEJG5CBM7A [33m~[0m
+$ ]0;~
+[32mАдминистратор@WIN-4SEJG5CBM7A [33m~[0m
+$ -- 0:bash -- time-stamp -- апр/28/18 11:46:14 --
+-- 0:bash -- time-stamp -- апр/28/18 11:59:22 --
+[K$ 
+]0;~
+[32mАдминистратор@WIN-4SEJG5CBM7A [33m~[0m
+$ screen.exe  -ls
+There is a screen on:
+	3812.miner	(Attached)
+1 Socket in /tmp/uscreens/S-Администратор.
+]0;~
+[32mАдминистратор@WIN-4SEJG5CBM7A [33m~[0m
+$ screen.exe  -ls[K[Kr
+There is a screen on:
+	3812.miner	(Attached)
+There is no screen to be resumed.
+]0;~
+[32mАдминистратор@WIN-4SEJG5CBM7A [33m~[0m
+$ screen.exe  -r
+There is a screen on:
+	3812.miner	(Attached)
+There is no screen to be resumed.
+]0;~
+[32mАдминистратор@WIN-4SEJG5CBM7A [33m~[0m
+$ screen.exe  -r ]0;~
+[32mАдминистратор@WIN-4SEJG5CBM7A [33m~[0m
+$ [K$ screen.exe  -r
+There is a screen on:
+	7272.miner	(Attached)
+There is no screen to be resumed.
+]0;~
+[32mАдминистратор@WIN-4SEJG5CBM7A [33m~[0m
+$ screen.exe  -r
+There is a screen on:
+	7272.miner	(Attached)
+There is no screen to be resumed.
+]0;~
+[32mАдминистратор@WIN-4SEJG5CBM7A [33m~[0m
+$ screen.exe  -rls[1Pr
+There is a screen on:
+	7272.miner	(Attached)
+There is no screen to be resumed.
+]0;~
+[32mАдминистратор@WIN-4SEJG5CBM7A [33m~[0m
+$ screen.exe  -r
+There is a screen on:
+	7272.miner	(Attached)
+There is no screen to be resumed.
+]0;~
+[32mАдминистратор@WIN-4SEJG5CBM7A [33m~[0m
+$ screen.exe  -r miner
+There is a screen on:
+	7272.miner	(Attached)
+There is no screen to be resumed matching miner.
+]0;~
+[32mАдминистратор@WIN-4SEJG5CBM7A [33m~[0m
+$ screen.exe  -r miner[K miner[K
+There is a screen on:
+	7272.miner	(Attached)
+There is no screen to be resumed.
+]0;~
+[32mАдминистратор@WIN-4SEJG5CBM7A [33m~[0m
+$ screen.exe  -r
+There is a screen on:
+	7272.miner	(Attached)
+There is no screen to be resumed.
+]0;~
+[32mАдминистратор@WIN-4SEJG5CBM7A [33m~[0m
+$ screen.exe  -r
+There is a screen on:
+	7272.miner	(Attached)
+There is no screen to be resumed.
+]0;~
+[32mАдминистратор@WIN-4SEJG5CBM7A [33m~[0m
+$ screen.exe  -r
+There is a screen on:
+	7272.miner	(Attached)
+There is no screen to be resumed.
+]0;~
+[32mАдминистратор@WIN-4SEJG5CBM7A [33m~[0m
+$ screen.exe  -r
+There is a screen on:
+	7272.miner	(Attached)
+There is no screen to be resumed.
+]0;~
+[32mАдминистратор@WIN-4SEJG5CBM7A [33m~[0m
+$ ]0;/hive
+[32mАдминистратор@WIN-4SEJG5CBM7A [33m/hive[0m
+$ ]0;~
+[32mАдминистратор@WIN-4SEJG5CBM7A [33m~[0m
+$ ]0;~
+[32mАдминистратор@WIN-4SEJG5CBM7A [33m~[0m
+$ ]0;~
+[32mАдминистратор@WIN-4SEJG5CBM7A [33m~[0m
+$ ]0;~
+[32mАдминистратор@WIN-4SEJG5CBM7A [33m~[0m
+$ [K$ 
+]0;~
+[32mАдминистратор@WIN-4SEJG5CBM7A [33m~[0m
+$ ]0;~
+[32mАдминистратор@WIN-4SEJG5CBM7A [33m~[0m
+$ ]0;~
+[32mАдминистратор@WIN-4SEJG5CBM7A [33m~[0m
+$ [K$ 
+]0;~
+[32mАдминистратор@WIN-4SEJG5CBM7A [33m~[0m
+$ 
+]0;~
+[32mАдминистратор@WIN-4SEJG5CBM7A [33m~[0m
+$ 
+]0;~
+[32mАдминистратор@WIN-4SEJG5CBM7A [33m~[0m
+$ 
+]0;~
+[32mАдминистратор@WIN-4SEJG5CBM7A [33m~[0m
+$ miner stop
+Stopping screen session 8636
+]0;~
+[32mАдминистратор@WIN-4SEJG5CBM7A [33m~[0m
+$ ]0;~
+[32mАдминистратор@WIN-4SEJG5CBM7A [33m~[0m
+$ ]0;~
+[32mАдминистратор@WIN-4SEJG5CBM7A [33m~[0m
+$ ]0;~
+[32mАдминистратор@WIN-4SEJG5CBM7A [33m~[0m
+$ ]0;~
+[32mАдминистратор@WIN-4SEJG5CBM7A [33m~[0m
+$ ]0;~
+[32mАдминистратор@WIN-4SEJG5CBM7A [33m~[0m
+$ ]0;~
+[32mАдминистратор@WIN-4SEJG5CBM7A [33m~[0m
+$ ]0;/hive
+[32mАдминистратор@WIN-4SEJG5CBM7A [33m/hive[0m
+$ ]0;~
+[32mАдминистратор@WIN-4SEJG5CBM7A [33m~[0m
+$ ]0;~
+[32mАдминистратор@WIN-4SEJG5CBM7A [33m~[0m
+$ ]0;~
+[32mАдминистратор@WIN-4SEJG5CBM7A [33m~[0m
+$ ]0;~
+[32mАдминистратор@WIN-4SEJG5CBM7A [33m~[0m
+$ -- 0:bash -- time-stamp -- апр/29/18 15:26:29 --
+]0;~
+[32mАдминистратор@WIN-4SEJG5CBM7A [33m~[0m
+$ -- 0:bash -- time-stamp -- апр/29/18 15:30:08 --
+]0;~
+[32mАдминистратор@WIN-4SEJG5CBM7A [33m~[0m
+$ -- 0:bash -- time-stamp -- апр/29/18 16:42:34 --
+]0;~
+[32mАдминистратор@WIN-4SEJG5CBM7A [33m~[0m
+$ -- 0:bash -- time-stamp -- апр/29/18 17:40:36 --
+]0;~
+[32mАдминистратор@WIN-4SEJG5CBM7A [33m~[0m
+$ ]0;~
+[32mАдминистратор@WIN-4SEJG5CBM7A [33m~[0m
+$ -- 0:bash -- time-stamp -- апр/29/18 22:05:59 --
+]0;~
+[32mАдминистратор@WIN-4SEJG5CBM7A [33m~[0m
+$ -- 0:bash -- time-stamp -- апр/29/18 22:16:39 --
+]0;~
+[32mАдминистратор@WIN-4SEJG5CBM7A [33m~[0m
+$ -- 0:bash -- time-stamp -- май/09/18 14:32:04 --
+[K$ ]0;~
+[32mАдминистратор@WIN-4SEJG5CBM7A [33m~[0m
+$ [K$ ]0;~
+[32mАдминистратор@WIN-4SEJG5CBM7A [33m~[0m
+$ [K$ wmic /namespace:\\root\wmi PATH MSAcpi_ThermalZoneTemperature get CurrentTemperature /value[C[C[K]0;~
+[32mАдминистратор@WIN-4SEJG5CBM7A [33m~[0m
+$ -- 0:bash -- time-stamp -- май/09/18 14:37:49 --
+-- 0:bash -- time-stamp -- май/09/18 15:04:06 --
+[K$ ]0;~
+[32mАдминистратор@WIN-4SEJG5CBM7A [33m~[0m
+$ [K$ 
+]0;~
+[32mАдминистратор@WIN-4SEJG5CBM7A [33m~[0m
+$ 
+]0;~
+[32mАдминистратор@WIN-4SEJG5CBM7A [33m~[0m
+$ wmic /namespace:\\root\wmi PATH MSAcpi_ThermalZoneTemperature get CurrentTemperature /value[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[K[C[C[16Pminer stop[C[Cscreen.exe  -r[C[C[4Pminer stop[C[Cscreen.exe  -r miner[K miner[K[C[C[4Pminer stop[C[Cwmic /namespace:\\root\wmi PATH MSAcpi_ThermalZoneTemperature get CurrentTemperature /value[C[C[Kwmic /namespace:\\root\wmi PATH MSAcpi_ThermalZoneTemperature get CurrentTemperature /value[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[K[C[C[16Pminer stop[C[Cscreen.exe  -r[C[C[4Pminer stop[K[Kart
+There is a screen on:
+	12120.miner	(Attached)
+1 Socket in /tmp/uscreens/S-Администратор.
+[0;31mMiner screen is already running[0m
+Run [0;36mminer[0m or [0;36mscreen -r[0m to resume screen
+]0;~
+[32mАдминистратор@WIN-4SEJG5CBM7A [33m~[0m
+$ 
+]0;~
+[32mАдминистратор@WIN-4SEJG5CBM7A [33m~[0m
+$ miner start[K[K[Kop
+Stopping screen session 12120
+]0;~
+[32mАдминистратор@WIN-4SEJG5CBM7A [33m~[0m
+$ -- 0:bash -- time-stamp -- май/09/18 15:07:47 --
+]0;~
+[32mАдминистратор@WIN-4SEJG5CBM7A [33m~[0m
+$ ]0;~
+[32mАдминистратор@WIN-4SEJG5CBM7A [33m~[0m
+$ ]0;~
+[32mАдминистратор@WIN-4SEJG5CBM7A [33m~[0m
+$ ]0;~
+[32mАдминистратор@WIN-4SEJG5CBM7A [33m~[0m
+$ -- 0:bash -- time-stamp -- май/15/18  0:31:09 --
+]0;/hive
+[32mАдминистратор@WIN-4SEJG5CBM7A [33m/hive[0m
+$ -- 0:bash -- time-stamp -- май/15/18  0:55:35 --
+-- 0:bash -- time-stamp -- май/15/18  0:58:46 --
+[K$ 
+]0;/hive
+[32mАдминистратор@WIN-4SEJG5CBM7A [33m/hive[0m
+$ miner stopart[1Pop
+/hive-config/rig.conf: строка 2: $'\r': команда не найдена
+/hive-config/rig.conf: строка 5: $'\r': команда не найдена
+/hive-config/rig.conf: строка 8: $'\r': команда не найдена
+/hive-config/rig.conf: строка 11: $'\r': команда не найдена
+/hive-config/rig.conf: строка 14: $'\r': команда не найдена
+/hive-config/rig.conf: строка 18: $'\r': команда не найдена
+/hive-config/rig.conf: строка 21: $'\r': команда не найдена
+/hive-config/rig.conf: строка 24: $'\r': команда не найдена
+/hive-config/wallet.conf: строка 1: $'null\r': команда не найдена
+[0;31mUnknown miner bminer[0m
+/hive-config/rig.conf: строка 2: $'\r': команда не найдена
+/hive-config/rig.conf: строка 5: $'\r': команда не найдена
+/hive-config/rig.conf: строка 8: $'\r': команда не найдена
+/hive-config/rig.conf: строка 11: $'\r': команда не найдена
+/hive-config/rig.conf: строка 14: $'\r': команда не найдена
+/hive-config/rig.conf: строка 18: $'\r': команда не найдена
+/hive-config/rig.conf: строка 21: $'\r': команда не найдена
+/hive-config/rig.conf: строка 24: $'\r': команда не найдена
+> Sending "danger": Unknown miner bminer
+Error sending message (curl code=3)
+]0;/hive
+[32mАдминистратор@WIN-4SEJG5CBM7A [33m/hive[0m
+$ 
+]0;/hive
+[32mАдминистратор@WIN-4SEJG5CBM7A [33m/hive[0m
+$ 
+]0;/hive
+[32mАдминистратор@WIN-4SEJG5CBM7A [33m/hive[0m
+$ screen.exe  -r
+There is a screen on:
+	4908.miner	(Attached)
+There is no screen to be resumed.
+]0;/hive
+[32mАдминистратор@WIN-4SEJG5CBM7A [33m/hive[0m
+$ screen.exe  -r [K[K[K[K[K[K[K[K[K[K[K[K[K[K[Kminer stop
+/hive-config/rig.conf: строка 2: $'\r': команда не найдена
+/hive-config/rig.conf: строка 5: $'\r': команда не найдена
+/hive-config/rig.conf: строка 8: $'\r': команда не найдена
+/hive-config/rig.conf: строка 11: $'\r': команда не найдена
+/hive-config/rig.conf: строка 14: $'\r': команда не найдена
+/hive-config/rig.conf: строка 18: $'\r': команда не найдена
+/hive-config/rig.conf: строка 21: $'\r': команда не найдена
+/hive-config/rig.conf: строка 24: $'\r': команда не найдена
+/hive-config/wallet.conf: строка 1: $'null\r': команда не найдена
+[0;31mUnknown miner bminer[0m
+/hive-config/rig.conf: строка 2: $'\r': команда не найдена
+/hive-config/rig.conf: строка 5: $'\r': команда не найдена
+/hive-config/rig.conf: строка 8: $'\r': команда не найдена
+/hive-config/rig.conf: строка 11: $'\r': команда не найдена
+/hive-config/rig.conf: строка 14: $'\r': команда не найдена
+/hive-config/rig.conf: строка 18: $'\r': команда не найдена
+/hive-config/rig.conf: строка 21: $'\r': команда не найдена
+/hive-config/rig.conf: строка 24: $'\r': команда не найдена
+> Sending "danger": Unknown miner bminer
+Error sending message (curl code=3)
+]0;/hive
+[32mАдминистратор@WIN-4SEJG5CBM7A [33m/hive[0m
+$ screen.exe  -r miner
+There is a screen on:
+	4908.miner	(Attached)
+There is no screen to be resumed matching miner.
+]0;/hive
+[32mАдминистратор@WIN-4SEJG5CBM7A [33m/hive[0m
+$ screen.exe  -r miner
+There is a screen on:
+	4908.miner	(Attached)
+There is no screen to be resumed matching miner.
+]0;/hive
+[32mАдминистратор@WIN-4SEJG5CBM7A [33m/hive[0m
+$ screen.exe  -r miner -x
+Attaching from inside of screen?
+]0;/hive
+[32mАдминистратор@WIN-4SEJG5CBM7A [33m/hive[0m
+$ screen.exe  -r miner -x quit
+Attaching from inside of screen?
+]0;/hive
+[32mАдминистратор@WIN-4SEJG5CBM7A [33m/hive[0m
+$ screen.exe  -r miner -x quit[K
+Attaching from inside of screen?
+]0;/hive
+[32mАдминистратор@WIN-4SEJG5CBM7A [33m/hive[0m
+$ screen.exe  -r miner -x[K[K[K[K[K[K[K[K[K
+There is a screen on:
+	4908.miner	(Attached)
+There is no screen to be resumed.
+]0;/hive
+[32mАдминистратор@WIN-4SEJG5CBM7A [33m/hive[0m
+$ 
+]0;/hive
+[32mАдминистратор@WIN-4SEJG5CBM7A [33m/hive[0m
+$ 
+]0;/hive
+[32mАдминистратор@WIN-4SEJG5CBM7A [33m/hive[0m
+$ screen.exe  -r 4908
+There is a screen on:
+	4908.miner	(Attached)
+There is no screen to be resumed matching 4908.
+]0;/hive
+[32mАдминистратор@WIN-4SEJG5CBM7A [33m/hive[0m
+$ screen.exe  -r 4908 -X
+Please specify a command.
+]0;/hive
+[32mАдминистратор@WIN-4SEJG5CBM7A [33m/hive[0m
+$ screen.exe  -r 4908 -X[Kx
+Attaching from inside of screen?
+]0;/hive
+[32mАдминистратор@WIN-4SEJG5CBM7A [33m/hive[0m
+$ 
+]0;/hive
+[32mАдминистратор@WIN-4SEJG5CBM7A [33m/hive[0m
+$ 
+]0;/hive
+[32mАдминистратор@WIN-4SEJG5CBM7A [33m/hive[0m
+$ 
+]0;/hive
+[32mАдминистратор@WIN-4SEJG5CBM7A [33m/hive[0m
+$ screen.exe  -r 4908 -xX[K[K
+There is a screen on:
+	4908.miner	(Attached)
+There is no screen to be resumed.
+]0;/hive
+[32mАдминистратор@WIN-4SEJG5CBM7A [33m/hive[0m
+$ hive
+/hive-config/rig.conf: строка 2: $'\r': команда не найдена
+/hive-config/rig.conf: строка 5: $'\r': команда не найдена
+/hive-config/rig.conf: строка 8: $'\r': команда не найдена
+/hive-config/rig.conf: строка 11: $'\r': команда не найдена
+/hive-config/rig.conf: строка 14: $'\r': команда не найдена
+/hive-config/rig.conf: строка 18: $'\r': команда не найдена
+/hive-config/rig.conf: строка 21: $'\r': команда не найдена
+/hive-config/rig.conf: строка 24: $'\r': команда не найдена
+/hive-config/wallet.conf: строка 1: $'null\r': команда не найдена
+[0;31mUnknown miner bminer[0m
+/hive-config/rig.conf: строка 2: $'\r': команда не найдена
+/hive-config/rig.conf: строка 5: $'\r': команда не найдена
+/hive-config/rig.conf: строка 8: $'\r': команда не найдена
+/hive-config/rig.conf: строка 11: $'\r': команда не найдена
+/hive-config/rig.conf: строка 14: $'\r': команда не найдена
+/hive-config/rig.conf: строка 18: $'\r': команда не найдена
+/hive-config/rig.conf: строка 21: $'\r': команда не найдена
+/hive-config/rig.conf: строка 24: $'\r': команда не найдена
+> Sending "danger": Unknown miner bminer
+Error sending message (curl code=3)
+CYGWIN_NT-6.3 WIN-4SEJG5CBM7A 2.10.0(0.325/5/3) 2018-02-02 15:16 x86_64 Cygwin
+[1;33m
+ _______ _______ ___ ___ _______
+|   |   |_     _|   |   |    ___|
+|       |_|   |_|   |   |    ___|
+|___|___|_______|\_____/|_______|
+
+[0m
+[0;36mWIN-4SEJG5CBM7A[0m
+[1;35m169.254.202.189 169.254.95.240 169.254.203.146 10.3.0.1 0.0.0.0 172.16.0.26 10.0.0.26 0.0.0.0 [0m
+No OpenVPN config found
+[0;33m
+#####################################################################
+###
+### You have connected monitor to integrated GPU on the motherboard?
+### Don't do this. Connect monitor to the 1st external GPU (in 16x slot).
+### However we will try to continue in 5 seconds.
+###
+#####################################################################
+[0m
+CYGWIN_NT-6.3 WIN-4SEJG5CBM7A 2.10.0(0.325/5/3) 2018-02-02 15:16 x86_64 Cygwin
+[0;36mWIN-4SEJG5CBM7A[0m
+[0;35mDescription                         IPAddress                                     
+Red Hat VirtIO Ethernet Adapter     {"10.0.0.26", "fe80::7198:2ca4:97c6:a6f6"}    
+TAP Adapter V9 for Private Tunnel   {"10.3.0.1"}                                  
+Red Hat VirtIO Ethernet Adapter #2  {"172.16.0.26", "fe80::b03e:7804:4f50:881c"}  
+
+[0m
+Файловая система Размер Использовано  Дост Использовано% Cмонтировано в
+C:/cygwin64         64G          47G   17G           74% /
+
+GetConsoleScreenBufferInfo failed: 6
+Current time:  11:00 PM May 14, 2018 
+Last restart:  10:55 AM Apr 23, 2018 
+
+System Uptime: 21:12:05:05
+
+
+[0;34m  [0m 00:02.0 [0;33mDevice 1234:1111 (rev 02)[0m
+
+[0;33m=== Commands FAQ ===
+[0;36mminer[0m - shows running miner screen
+[0;36mminer start | stop[0m - starts or stops miner obviously
+[0;36magent-screen[0m - shows hive client agent
+[1;36mCtrl+A, D[0m - detach from screen (miner or agent) so it will be working in background
+[0;36mselfupgrade[0m - upgrade hive from repository
+[0;36mfirstrun -f[0m - force rig setup, you will enter ID and password again
+[0;36mwifi[0m - to setup WiFi if you have one
+[0;35mnet-test[0m - check your network connection
+[0;35mgpu-fans-find[0m - find GPU by spinning fans
+[0;35mlogs-off[0m - for USB Flash Drives move logs to RAM
+
+> Detecting watchdogs
+Watchdogs InUa found: 0
+OpenDev Watchdogs found: 0
+Esonics Watchdogs found: 0
+QinHeng Electronics HL-340 Watchdogs found: 0
+Not found config /hive-config/watchdog_srrv2.txt
+> Applying crontab TODO
+> Caching host resolve
+/hive/bin/hostname-check: строка 23: hostnamectl: команда не найдена
+Writing DNS resolve "104.25.128.23   0      api.hiveos.farm" to /etc/hosts
+> Saying hello to server
+{"method":"hello","jsonrpc":"2.0","id":0,"params":{"rig_id":"136466","passwd":"123123","boot_time":"1524477320","boot_event":"1","ip":["10.0.0.26"],"net_interfaces":[{"iface":"TODO","mac":"66:64:30:64:37:31"}],"openvpn":"0","gpu":[{"busid":"00:02.0","name":"Device 1234:1111 (rev 02)\r","brand":"cpu"}],"gpu_count_amd":"0","gpu_count_nvidia":"0","mb":{"manufacturer":"QEMU\r","product":"Standard PC (i440FX + PIIX, 1996)\r"},"cpu":{"model":"Common KVM processor","cores":"16","aes":"0"},"kernel":"2.10.0(0.325/5/3)","version":"0.1-01","amd_version":"AMD_VER_TODO","nvidia_version":"390.65\r"}}
+{
+  "result": {
+    "rig_name": "win",
+    "config": "### MINERS HIVE CONFIG ################################\n\n#URL where hive server is\nHIVE_HOST_URL=\"http://api.hiveos.farm\"\n\n#Id of the rig, numeric value from admin panel\nRIG_ID=136466\n\n#Rig passord as in admin panel\nRIG_PASSWD=\"123123\"\n\n#Rig hostname and worker name for pool\nWORKER_NAME=\"win\"\n\n#Selected miner\nMINER=\"bminer\"\nMINER2=\"\"\n\n#Watchdog\nWD_ENABLED=\n\n#Rig timezone\nTIMEZONE=\"Europe/Minsk\"\n",
+    "wallet": "### WALLET:  ###\n\nEMAIL=\"\"\n\nEWAL=\"\"\nZWAL=\"\"\nDWAL=\"\"\n\n#claymore\nEPOOLS_TPL=\"\"\nDCOIN=\"\"\nDPOOLS_TPL=\"\"\nDCRI=\nCLAYMORE_USER_CONFIG=''\nCLAYMORE_VER=\n\n#claymore-z\nZPOOLS_TPL=\"\"\nCLAYMORE_Z_USER_CONFIG=''\n\n#claymore-x\nXPOOLS_TPL=\"\"\nCLAYMORE_X_USER_CONFIG=''\n\n#ewbf\nZSERVER=\"\"\nZTEMPLATE=\"\"\nZPORT=\"\"\nZPASS=\"\"\nEWBF_USER_CONFIG=''\n\n#ccminer\nCCMINER_FORK=\nCCMINERCONF=\n\n\n#ethminer\nETHMINER_OPENCL=\"\"\nETHMINER_CUDA=\"\"\nETHMINER_SERVER=\"\"\nETHMINER_PORT=\"\"\nETHMINER_TEMPLATE=\"\"\nETHMINER_PASS=\"\"\nETHMINER_USER_CONFIG=''\nETHMINER_VER=\n\n#sgminer-gm\nSGMINER_GM_FORK=\"\"\nSGMINER_GM_ALGO=\"\"\nSGMINER_GM_TEMPLATE=\"\"\nSGMINER_GM_URL=\"\"\nSGMINER_GM_PASS=\"\"\nSGMINER_GM_USER_CONFIG=''\n\n#dstm\nDSTM_TEMPLATE=\"\"\nDSTM_SERVER=\"\"\nDSTM_PORT=\"\"\nDSTM_PASS=\"\"\nDSTM_USER_CONFIG=''\n\n#bminer\nBMINER_TEMPLATE=\"\"\nBMINER_URL=\"\"\nBMINER_PASS=\"\"\nBMINER_USER_CONFIG=''\n\n#lolminer\nLOLMINER_TEMPLATE=\"\"\nLOLMINER_SERVER=\"\"\nLOLMINER_PORT=\"\"\nLOLMINER_PASS=\"\"\nLOLMINER_USER_CONFIG=''\n\n#optiminer\nOPTIMINER_ALGO=\"\"\nOPTIMINER_TEMPLATE=\"\"\nOPTIMINER_SERVER=\"\"\nOPTIMINER_PORT=\"\"\nOPTIMINER_PASS=\"\"\nOPTIMINER_USER_CONFIG=''\n\n#xmr-stak\nXMR_STAK_TEMPLATE=\"\"\nXMR_STAK_URL=\"\"\nXMR_STAK_PASS=\"\"\nXMR_STAK_USER_CONFIG=''\nXMR_STAK_AMD=''\nXMR_STAK_NVIDIA=''\nXMR_STAK_CPU=''\n\n#xmr-stak-cpu\nXMR_STAK_CPU_TEMPLATE=\"\"\nXMR_STAK_CPU_URL=\"\"\nXMR_STAK_CPU_PASS=\"\"\nXMR_STAK_CPU_USER_CONFIG=''\n\n#xmrig\nXMRIG_TEMPLATE=\"\"\nXMRIG_URL=\"\"\nXMRIG_PASS=\"\"\nXMRIG_USER_CONFIG=''\n\n#cpuminer-opt\nCPUMINER_OPT_TEMPLATE=\"\"\nCPUMINER_OPT_URL=\"\"\nCPUMINER_OPT_PASS=\"\"\nCPUMINER_OPT_ALGO=\"\"\nCPUMINER_OPT_USER_CONFIG=''\n\n#asicminer\nASICMINER_TEMPLATE=\"\"\nASICMINER_URL=\"\"\nASICMINER_PASS=\"\"\nASICMINER_USER_CONFIG=''\n\n"
+  },
+  "jsonrpc": "2.0",
+  "id": null
+}
+00
+
+Saving AMD OC config
+Touching /tmp/.hive-hello-ok
+> Starting agent screen
+Starting new agent screen session
+> Starting miner
+There are screens on:
+	4908.miner	(Attached)
+	512.agent	(Detached)
+2 Sockets in /tmp/uscreens/S-Администратор.
+[0;31mMiner screen is already running[0m
+Run [0;36mminer[0m or [0;36mscreen -r[0m to resume screen
+> Hive Start Finished
+]0;/hive
+[32mАдминистратор@WIN-4SEJG5CBM7A [33m/hive[0m
+$ hive[C[Cscreen.exe  -r
+There are screens on:
+	4908.miner	(Attached)
+	512.agent	(Attached)
+There is no screen to be resumed.
+]0;/hive
+[32mАдминистратор@WIN-4SEJG5CBM7A [33m/hive[0m
+$ screen.exe  -r[K[K[K[K[K[K[K[K[K[K[K[K[K[Kminer stop
+Stopping screen session 4908
+]0;/hive
+[32mАдминистратор@WIN-4SEJG5CBM7A [33m/hive[0m
+$ -- 0:bash -- time-stamp -- май/15/18  1:03:09 --
+]0;/
+[32mАдминистратор@WIN-4SEJG5CBM7A [33m/[0m
+$ ]0;/hive
+[32mАдминистратор@WIN-4SEJG5CBM7A [33m/hive[0m
+$ -- 0:bash -- time-stamp -- май/15/18  1:24:25 --
+]0;/hive
+[32mАдминистратор@WIN-4SEJG5CBM7A [33m/hive[0m
+$ -- 0:bash -- time-stamp -- май/15/18  1:27:18 --
+]0;/hive
+[32mАдминистратор@WIN-4SEJG5CBM7A [33m/hive[0m
+$ ]0;/hive
+[32mАдминистратор@WIN-4SEJG5CBM7A [33m/hive[0m
+$ ]0;/hive
+[32mАдминистратор@WIN-4SEJG5CBM7A [33m/hive[0m
+$ -- 0:bash -- time-stamp -- май/15/18  1:36:39 --
+]0;/hive
+[32mАдминистратор@WIN-4SEJG5CBM7A [33m/hive[0m
+$ ]0;/hive
+[32mАдминистратор@WIN-4SEJG5CBM7A [33m/hive[0m
+$ -- 0:bash -- time-stamp -- май/15/18  1:49:07 --
+]0;/hive
+[32mАдминистратор@WIN-4SEJG5CBM7A [33m/hive[0m
+$ -- 0:bash -- time-stamp -- май/15/18  1:59:48 --
+]0;/hive
+[32mАдминистратор@WIN-4SEJG5CBM7A [33m/hive[0m
+$ -- 0:bash -- time-stamp -- май/15/18  2:08:24 --
+]0;/hive
+[32mАдминистратор@WIN-4SEJG5CBM7A [33m/hive[0m
+$ ]0;~
+[32mАдминистратор@WIN-4SEJG5CBM7A [33m~[0m
+$ [K$ ^C
+]0;~
+[32mАдминистратор@WIN-4SEJG5CBM7A [33m~[0m
+$ OverdriveNTool.exe -consoleonly -r020[C[C[K]0;~
+[32mАдминистратор@WIN-4SEJG5CBM7A [33m~[0m
+$ ]0;~
+[32mАдминистратор@WIN-4SEJG5CBM7A [33m~[0m
+$ ]0;~
+[32mАдминистратор@WIN-4SEJG5CBM7A [33m~[0m
+$ -- 0:bash -- time-stamp -- июн/07/18  7:04:55 --
+]0;~
+[32mАдминистратор@WIN-4SEJG5CBM7A [33m~[0m
+$ -- 0:bash -- time-stamp -- июн/07/18  7:19:36 --

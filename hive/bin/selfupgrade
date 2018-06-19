@@ -1,0 +1,60 @@
+#!/usr/bin/env bash
+
+. colors
+
+#remove stupid rep file for smaller updates
+[[ -f /etc/apt/sources.list.d/amdgpu-pro.list ]] && rm /etc/apt/sources.list.d/amdgpu-pro.list
+
+
+#Sometimes Ubuntu fails to update repos
+dpkg --configure -a
+
+
+#apt-get update -o Dir::Etc::sourcelist=hiverepo.list
+#apt-get update
+apt-get update -o Dir::Etc::sourcelist="sources.list.d/hiverepo.list" -o Dir::Etc::sourceparts="-" -o APT::Get::List-Cleanup="0"
+exitcode=$?
+[[ $exitcode -ne 0 ]] && echo -e "${RED}Repository update failed${NOCOLOR}" && exit $exitcode
+
+
+updateavail=`apt list --upgradable 2>&1 | grep hive | wc -l`
+[[ $updateavail == 0 ]] &&
+	echo -e "${GREEN}Hive is up to date already${NOCOLOR}" &&
+	exit 0
+
+echo ------------------------------------------------------
+
+apt-get upgrade -y hive
+exitcode=$?
+[[ $exitcode -ne 0 ]] && echo -e "${RED}Upgrade failed${NOCOLOR}" && exit $exitcode
+
+echo ------------------------------------------------------
+
+apt-get -y autoremove
+
+
+#clean cached packages to save space
+apt-get clean
+
+
+#echo ------------------------------------------------------
+#Moved from postinst again as hello need to see new version
+echo -e "${YELLOW}> Saying hello to server again${NOCOLOR}"
+hello restartminer
+#miner restart
+#wd restart
+
+
+#Restart agent
+echo -e "${YELLOW}> Restarting agent${NOCOLOR}"
+screen -S agent -X quit
+agent-screen
+
+
+echo -e "${GREEN}Upgrade complete. Have a happy mining.${NOCOLOR}"
+
+
+#Flush buffers if any files changed
+sync
+
+exit 0

@@ -1,0 +1,155 @@
+#!/usr/bin/env bash
+
+#[ -t 1 ] &&
+. colors
+
+date
+echo ""
+
+AMD_OC_CONF="/hive-config/amd-oc.conf"
+DEFAULT_CORE_STATE=5
+
+n=`gpu-detect AMD`
+
+if [[ $n == 0 ]]; then
+	echo "No AMD cards detected, exiting"
+	exit
+fi
+echo "Detected $n AMD cards"
+
+if [ ! -f $AMD_OC_CONF ]; then
+	echo -e "ERROR: $AMD_OC_CONF does not exist"
+	exit
+fi
+
+source $AMD_OC_CONF
+
+
+#pad arrays
+[[ ! -z $CORE_CLOCK ]] &&
+CORE_CLOCK=($CORE_CLOCK) &&
+for (( i=${#CORE_CLOCK[@]}; i < $n; ++i )); do
+	CORE_CLOCK[$i]=${CORE_CLOCK[$i-1]}
+done
+
+#[[ ! -z $CORE_VDDC_INDEX ]] &&
+#CORE_VDDC_INDEX=($CORE_VDDC_INDEX) &&
+#for (( i=${#CORE_VDDC_INDEX[@]}; i < $n; ++i )); do
+#    CORE_VDDC_INDEX[$i]=${CORE_VDDC_INDEX[$i-1]}
+#done
+
+[[ ! -z $CORE_VDDC ]] &&
+CORE_VDDC=($CORE_VDDC) &&
+for (( i=${#CORE_VDDC[@]}; i < $n; ++i )); do
+  CORE_VDDC[$i]=${CORE_VDDC[$i-1]}
+done
+
+#[[ - z $CORE_STATE ]] && CORE_STATE="5" #default is 5
+[[ ! -z $CORE_STATE ]] &&
+CORE_STATE=($CORE_STATE) &&
+for (( i=${#CORE_STATE[@]}; i < $n; ++i )); do
+	CORE_STATE[$i]=${CORE_STATE[$i-1]}
+done
+
+[[ ! -z $MEM_CLOCK ]] &&
+MEM_CLOCK=($MEM_CLOCK) &&
+for (( i=${#MEM_CLOCK[@]}; i < $n; ++i )); do
+	MEM_CLOCK[$i]=${MEM_CLOCK[$i-1]}
+done
+
+[[ ! -z $MEM_STATE ]] &&
+MEM_STATE=($MEM_STATE) &&
+for (( i=${#MEM_STATE[@]}; i < $n; ++i )); do
+	MEM_STATE[$i]=${MEM_STATE[$i-1]}
+done
+
+
+[[ ! -z $FAN ]] &&
+FAN=($FAN) &&
+for (( i=${#FAN[@]}; i < $n; ++i )); do
+	FAN[$i]=${FAN[$i-1]}
+done
+
+[[ ! -z $MAX_TEMP ]] &&
+MAX_TEMP=($MAX_TEMP) &&
+for (( i=${#MAX_TEMP[@]}; i < $n; ++i )); do
+	MAX_TEMP[$i]=${MAX_TEMP[$i-1]}
+done
+
+
+echo "CORE_CLOCK = ${CORE_CLOCK[*]}"
+echo "CORE_STATE = ${CORE_STATE[*]}"
+echo "CORE_VDDC  = ${CORE_VDDC[*]}"
+echo "MEM_CLOCK  = ${MEM_CLOCK[*]}"
+echo "MEM_STATE  = ${MEM_STATE[*]}"
+echo "FAN        = ${FAN[*]}"
+echo "MAX_TEMP   = ${MAX_TEMP[*]}"
+
+#exit
+
+i=-1
+ont_list=$(OverdriveNTool.exe -consoleonly -getcurrent)
+echo $ont_list
+ont_ids=$(echo $ont_list | grep -o '[[:digit:]]:' | sed s/\://g)
+for ont_gpu in $ont_ids; do
+	(( i++ ))
+	echo ""
+
+	args=
+	args+=" -consoleonly -r$ont_gpu -ac$ont_gpu"
+
+	if [[ ! -z $CORE_CLOCK && ${CORE_CLOCK[$i]} > 0 ]]; then
+		ONT_CORE_CLOCK=${CORE_CLOCK[$i]}
+	else
+		ONT_CORE_CLOCK='*'
+	fi
+
+	if [[ ! -z $MEM_CLOCK && ${MEM_CLOCK[$i]} > 0 ]]; then
+		ONT_MEM_CLOCK=${MEM_CLOCK[$i]}
+	else
+		ONT_MEM_CLOCK='*'
+	fi
+
+	if [[ ! -z $CORE_VDDC && ${CORE_VDDC[$i]} > 0 ]]; then
+		ONT_CORE_VDDC=${CORE_VDDC[$i]}
+		ONT_MEM_VDDC=${CORE_VDDC[$i]}
+	else
+		ONT_CORE_VDDC='*'
+		ONT_MEM_VDDC='*'
+	fi
+
+	if [[ ! -z $FAN && ${FAN[$i]} > 0 ]]; then
+		ONT_FAN=${FAN[$i]}
+	else
+		ONT_FAN='Auto'
+	fi
+
+	if [[ ! -z $MAX_TEMP && ${MAX_TEMP[$i]} > 0 ]]; then
+		ONT_MAX_TEMP=${MAX_TEMP[$i]}
+	else
+		ONT_MAX_TEMP='82'
+	fi
+
+	args+=" GPU_P#='$ONT_CORE_CLOCK;$ONT_CORE_VDDC'"
+	args+=" Mem_P#='$ONT_MEM_CLOCK;$ONT_MEM_VDDC'"
+	args+=" setconstantfanspeed=$ONT_FAN"
+	args+=" Power_Temp=$ONT_MAX_TEMP"
+	#echo $args
+
+	#ONTRESULT=`OverdriveNTool.exe $args`
+	#[[ $? -ne 0 ]] && color=$RED || color=$NOCOLOR
+	#ONTRESULT=`echo "$ONTRESULT" | grep -v "^$"`
+	#echo -e "${color}$nvresult${NOCOLOR}"
+
+	oc_cmd="OverdriveNTool.exe $args"
+	echo $oc_cmd
+	eval $oc_cmd
+
+done
+
+
+sync
+#just in case, silly flushing reasons
+sleep 0.2
+
+exit 0

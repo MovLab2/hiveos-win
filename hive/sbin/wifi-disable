@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+
+wlandev=wlan0
+wifidev=`ifconfig ra0 2>/dev/null | grep ra0 | wc -l`
+if [[ $wifidev == 1 ]]; then
+	wlandev=ra0
+fi
+
+
+SERVICE_NAME=wpa_supplicant@$wifidev
+
+systemctl stop $SERVICE_NAME
+
+systemctl is-enabled $SERVICE_NAME > /dev/null
+[[ $? == 0 ]] && # 1 - disabled
+	systemctl disable $SERVICE_NAME &&
+	echo "WiFi $SERVICE_NAME service disabled"

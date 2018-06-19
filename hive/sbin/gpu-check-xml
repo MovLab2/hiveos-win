@@ -1,0 +1,50 @@
+#!/usr/bin/env bash
+
+
+	rdom () { local IFS=\> ; read -d \< E C ;}
+  gpu=""
+  gpuz() {                             
+	if [[ -e /tmp/gpu-detect.xml ]]; then
+    loc="1"
+		while rdom; do
+			if [[ $E = "location" ]]; then
+        #echo "$1"
+        if [[ "$1" != $C ]]; then
+          loc="0"
+        else
+          gpu=""
+				  declare -A gpu
+          loc="1"
+          gpu=( ["location"]=$C )
+        fi      
+			elif [[ $E = "cardname" && $loc = "1" ]]; then
+        gpu+=( ["cardname"]=$C )
+			elif [[ $E = "gpuname" && $loc = "1" ]]; then
+				gpu+=( ["gpuname"]=$C )
+			elif [[ $E = "subvendor" && $loc = "1" ]]; then
+				gpu+=( ["subvendor"]=$C )
+			elif [[ $E = "memsize" && $loc = "1" ]]; then
+				gpu+=( ["memsize"]=$C"M" )
+			elif [[ $E = "biosversion" && $loc = "1" ]]; then
+				gpu+=( ["biosversion"]=$C )
+			elif [[ $E = "businterface" && $loc = "1" ]]; then
+				gpu+=( ["businterface"]=$C )
+			elif [[ $E = "memtype" && $loc = "1" ]]; then
+				gpu+=( ["memtype"]=$C )
+			elif [[ $E = "memvendor" && $loc = "1" ]]; then
+				gpu+=( ["memvendor"]=$C )
+			elif [[ $E = "driverversion" && $loc = "1" ]]; then
+				gpu+=( ["driverversion"]=$C )
+			#elif [[ $E = "physx" && $loc = "1" ]]; then
+        #echo ${gpu[@]}
+        #return 0  
+			fi
+		done < /tmp/gpu-detect.xml
+	fi
+  declare -p gpu
+  }
+  
+  
+#gpuz "1:0:0"
+eval $(gpuz "1:0:0")
+echo ${gpu["cardname"]}

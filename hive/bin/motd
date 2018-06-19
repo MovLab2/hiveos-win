@@ -1,0 +1,30 @@
+#!/usr/bin/env bash
+. colors
+#ln -s /hive/bin/motd /etc/update-motd.d/00-my-motd
+
+uname -a
+echo -e ${CYAN}`hostname`${NOCOLOR}
+
+echo -ne ${PURPLE}
+wmic nicconfig where ipenabled=true get description,ipaddress
+echo -e "${NOCOLOR}"
+
+df -h /
+
+echo ""
+
+uptime
+
+echo  ""
+
+#echo "AMD GPU: `/hive/sbin/gpu-detect AMD`"
+#echo "NVIDIA GPU: `/hive/sbin/gpu-detect NVIDIA`"
+#echo ""
+
+/hive/sbin/gpu-detect list
+
+echo ""
+
+helpme
+
+echo ""

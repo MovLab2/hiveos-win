@@ -1,0 +1,54 @@
+Usage: z-enemy [OPTIONS]
+Options:
+  -a, --algo=ALGO         Coin hash algorithm to use:
+                             x16r       (X16R: Raven)
+                             x16s       (X16S: Pigeon)
+                             phi        (PHI1612: LUXCoin)
+                             bitcore    (Bitcore: BTX)
+                             x17        (X17: Verge)
+                             vit        (Vitality)
+			     xevan      (Xevan: Transend)
+			     tribus     (Tribus: DNR)  	
+  -d, --devices           Comma separated list of CUDA devices to use (0,1 etc).
+                          Alternatively takes
+                          string names of your cards like gtx780ti or gt640#2
+                          (matching 2nd gt640 in the PC)
+  -i  --intensity=N[,N]   GPU intensity 8.0-25.0, decimals allowed (default: 19) 
+      --cuda-schedule     set CUDA scheduling option:
+	                         0: BlockingSync (default)
+	                         1: Spin
+	                         2: Yield
+  -f, --diff-factor       Divide difficulty by this factor (default 1.0) 
+  -l, --log=FILE          Duplicate output into log file
+  -m, --diff-multiplier   Multiply difficulty by this value (default 1.0) 
+  -o, --url=URL           URL of mining server
+  -O, --userpass=U:P      username:password pair for mining server
+  -u, --user=USERNAME     username for mining server
+  -p, --pass=PASSWORD     password for mining server
+      --cert=FILE         certificate for mining server using SSL
+  -x, --proxy=[PROTOCOL://]HOST[:PORT]  connect through a proxy
+  -t, --threads=N         number of miner threads (default: number of nVidia GPUs)
+  -r, --retries=N         number of times to retry if a network call fails
+                          (default: retry indefinitely)
+  -R, --retry-pause=N     time to pause between retries, in seconds (default: 30)
+  -T, --timeout=N         network timeout, in seconds (default: 300)
+  -s, --scantime=N        upper bound on time spent scanning current work when
+                          long polling is unavailable, in seconds (default: 60)
+  -n, --ndevs             list cuda devices
+  -N, --statsavg          number of samples used to compute hashrate (default: 30)
+      --no-extranonce     disable extranonce subscribe on stratum
+  -q, --quiet             disable per-thread hashmeter output
+      --no-color          disable colored output
+      --cpu-affinity      set process affinity to cpu core(s), mask 0x3 for cores 0 and 1
+      --cpu-priority      set process priority (default: 3) 0 idle, 2 normal to 5 highest
+  -b, --api-bind=port     IP:port for the miner API (default: 127.0.0.1:4068), 0 disabled
+      --api-allow=...     IP/mask of the allowed api client(s), 0/0 for all
+      --api-remote        Allow remote control, like pool switching
+      --mem-clock=3505    Set the gpu memory boost clock
+      --gpu-clock=1150    Set the gpu engine boost clock
+      --plimit=100        Set the gpu power limit in percentage
+      --tlimit=80         Set the gpu thermal limit in degrees
+  -B, --background        run the miner in the background
+  -c, --config=FILE       load a JSON-format configuration file
+  -V, --version           display version information and exit
+  -h, --help              display this help text and exit

@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+
+if [[ -e "/cygdrive/c/Program Files/NVIDIA Corporation/NVSMI/nvidia-smi.exe" ]]; then
+  /cygdrive/c/Program\ Files/NVIDIA\ Corporation/NVSMI/nvidia-smi.exe $*
+else 
+  echo "";
+fi
+
+
+exit 0

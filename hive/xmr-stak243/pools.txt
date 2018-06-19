@@ -1,0 +1,29 @@
+  "pool_list": [
+    {
+      "pool_address": "pool.supportxmr.com:5555",
+      "wallet_address": "463tWEBn5XZJSxLU6uLQnQ2iY9xuNcDbjLSjkn3XAXHCbLrTTErJrBWYgHJQyrCwkNgYvyV3z8zctJLPCZy24jvb3NiTcTJ.19d30cd4f2504ed6b588541c18fe7fd7c2ffc91111834bc8b38e1cab7fde908e",
+      "pool_password": "win:49.pasha@gmail.com",
+      "use_nicehash": false,
+      "use_tls": false,
+      "tls_fingerprint": "",
+      "pool_weight": 1,
+      "rig_id": "win"
+    }
+  ],
+  "currency": "monero7",
+  "call_timeout": 10,
+  "retry_time": 30,
+  "giveup_limit": 0,
+  "verbose_level": 3,
+  "print_motd": true,
+  "h_print_time": 60,
+  "aes_override": null,
+  "use_slow_memory": "warn",
+  "tls_secure_algo": true,
+  "daemon_mode": false,
+  "flush_stdout": false,
+  "output_file": "/var/log/miner/xmr-stak/xmr-stak.log",
+  "httpd_port": 60045,
+  "http_login": "",
+  "http_pass": "",
+  "prefer_ipv4": true

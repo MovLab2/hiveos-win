@@ -1,0 +1,66 @@
+if [ ! -f /etc/ftpusers ]
+then
+    /usr/bin/mkdir -p /etc
+    /usr/bin/cp /etc/defaults/etc/ftpusers /etc/ftpusers
+fi
+
+if [ ! -f /etc/ftpwelcome ]
+then
+    /usr/bin/mkdir -p /etc
+    /usr/bin/cp /etc/defaults/etc/ftpwelcome /etc/ftpwelcome
+fi
+
+if [ ! -f /etc/inetd.conf ]
+then
+    /usr/bin/mkdir -p /etc
+    /usr/bin/cp /etc/defaults/etc/inetd.conf /etc/inetd.conf
+fi
+
+if [ ! -f /etc/shells ]
+then
+    /usr/bin/mkdir -p /etc
+    /usr/bin/cp /etc/defaults/etc/shells /etc/shells
+fi
+
+if [ ! -f /etc/motd ]
+then
+    /usr/bin/mkdir -p /etc
+    /usr/bin/cp /etc/defaults/etc/motd /etc/motd
+fi
+
+if [ ! -f /etc/syslog.conf ]
+then
+    /usr/bin/mkdir -p /etc
+    /usr/bin/cp /etc/defaults/etc/syslog.conf /etc/syslog.conf
+fi
+
+if [ ! -f /etc/xinetd.d/ftpd ]
+then
+    /usr/bin/mkdir -p /etc/xinetd.d
+    /usr/bin/cp /etc/defaults/etc/xinetd.d/ftpd /etc/xinetd.d/ftpd
+fi
+
+if [ ! -f /etc/xinetd.d/talk ]
+then
+    /usr/bin/mkdir -p /etc/xinetd.d
+    /usr/bin/cp /etc/defaults/etc/xinetd.d/talk /etc/xinetd.d/talk
+fi
+
+if [ ! -f /etc/xinetd.d/telnet ]
+then
+    /usr/bin/mkdir -p /etc/xinetd.d
+    /usr/bin/cp /etc/defaults/etc/xinetd.d/telnet /etc/xinetd.d/telnet
+fi
+
+if [ ! -f /etc/xinetd.d/uucp ]
+then
+    /usr/bin/mkdir -p /etc/xinetd.d
+    /usr/bin/cp /etc/defaults/etc/xinetd.d/uucp /etc/xinetd.d/uucp
+fi
+
+export IU_CONFIG_AUTO_ANSWER_NO=1
+/usr/bin/iu-config
+
+export SYSLOGD_CONFIG_AUTO_ANSWER_NO=1
+/usr/bin/syslogd-config
+
