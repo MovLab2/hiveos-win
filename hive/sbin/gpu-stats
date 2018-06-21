@@ -54,15 +54,15 @@ function amd_stats {
 	while read -r s; do
 		re='^([0-9a-z\:\.]+) (VGA compatible|3D) controller: (.*)$'
 		[[ $s =~ $re ]]
-		busid=${BASH_REMATCH[1]}
-		gpuz_busid=$(echo "$busid" | sed 's/\./\:/g' | sed 's/\:0/\:/g; s/^0//' | sed 's/\:\:/\:0\:/; s/:$/\:0/')
+		local busid=${BASH_REMATCH[1]}
+		local gpuz_busid=$(echo "$busid" | sed 's/\./\:/g' | sed 's/\:0/\:/g; s/^0//' | sed 's/\:\:/\:0\:/; s/:$/\:0/')
 		eval $(gpuz "$gpuz_busid")
-		name_gpu=${gpu["cardname"]}
-		temp="0"
-		temp=$(echo "$ohm_response" | jq --arg name_gpu "$name_gpu" '.Children[].Children[] | select(.Text==$name_gpu).Children[] | select(.Text=="Temperatures").Children[].Value' | awk -F \. '{print $1}' | sed s/\"//g)
-		speed="0"
-		speed=$(echo "$ohm_response" | jq --arg name_gpu "$name_gpu" '.Children[].Children[] | select(.Text==$name_gpu).Children[] | select(.Text=="Controls").Children[].Value' | awk -F \. '{print $1}' | sed s/\"//g)
-		power="0"
+		local name_gpu=${gpu["cardname"]}
+		local temp="0"
+		local temp=$(echo "$ohm_response" | jq --arg name_gpu "$name_gpu" '.Children[].Children[] | select(.Text==$name_gpu).Children[] | select(.Text=="Temperatures").Children[].Value' | awk -F \. '{print $1}' | sed s/\"//g)
+		local speed="0"
+		local speed=$(echo "$ohm_response" | jq --arg name_gpu "$name_gpu" '.Children[].Children[] | select(.Text==$name_gpu).Children[] | select(.Text=="Controls").Children[].Value' | awk -F \. '{print $1}' | sed s/\"//g)
+		local power="0"
 		putstats $busid "amd" $temp $speed "0" "$power"
 	done <<<"$list"
 
@@ -218,5 +218,3 @@ jq -c -n \
 #3, 2017/10/04 00:54:27.667, 193.98 W, 2025 MHz, 5481 MHz, 2025 MHz
 #4, 2017/10/04 00:54:27.674, 193.30 W, 2037 MHz, 5481 MHz, 2037 MHz
 #5, 2017/10/04 00:54:27.679, 133.95 W, 2050 MHz, 4252 MHz, 2050 MHz
-
-
