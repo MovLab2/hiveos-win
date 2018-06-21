@@ -145,7 +145,7 @@ for (( i=0; i < $n; ++i )); do
 
 	[[ ! -z $MEM ]] &&
 		#args+=" -a [gpu:$i]/GPUMemoryTransferRateOffset[$x]=${MEM[$i]}"
-		args+=" -setMemoryClockOffset:$i,0,${CLOCK[$i]}"
+		args+=" -setMemoryClockOffset:$i,0,${MEM[$i]}"
 
 #	[[ ! -z $LOGO_BRIGHTNESS ]] &&
 #		args+=" -a [gpu:$i]/GPULogoBrightness=$LOGO_BRIGHTNESS"
