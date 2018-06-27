@@ -39,7 +39,7 @@ function miner_stats {
 			#0000:03:00.0, .result[].busid[5:] trims first 5 chars
 			#stats_raw=`curl --connect-timeout 2 --max-time $API_TIMEOUT --silent --noproxy '*' http://localhost:42000/getstat`
 			#curl uses http_proxy env var, we don't need it. --noproxy does not work
-			stats_raw=`echo "GET /getstat" | nc -w $API_TIMEOUT localhost 42000 | tail -n 1`
+			stats_raw=`echo "GET /getstat" | nc -w $API_TIMEOUT localhost 42000 | tr -dc '[:print:]' | tail -n 1`
 			if [[ $? -ne 0  || -z $stats_raw ]]; then
 				echo -e "${YELLOW}Failed to read $miner stats from localhost:42000${NOCOLOR}"
 			else
@@ -141,7 +141,7 @@ function miner_stats {
 			fi
 		;;
 		dstm)
-			stats_raw=`echo '{"id":1, "method":"getstat"}' | nc -w $API_TIMEOUT localhost 43000`
+			stats_raw=`echo '{"id":1, "method":"getstat"}' | nc -w $API_TIMEOUT localhost 43000 | tr -dc '[:print:]'`
 			if [[ $? -ne 0 || -z $stats_raw ]]; then
 				echo -e "${YELLOW}Failed to read $miner from localhost:43000${NOCOLOR}"
 			else
